@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UNILEND"
+            android:textColor="#1565C0"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="32dp"
+            android:text="Hệ thống Quản lý Mượn Trả Thiết bị Đại học"
+            android:textColor="#546E7A"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/edtUsername"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Mã SV / Mã GV / Email (VD: SV2026001)"
+            android:inputType="text"
+            android:paddingHorizontal="16dp" />
+
+        <EditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Mật khẩu"
+            android:inputType="textPassword"
+            android:paddingHorizontal="16dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#1565C0"
+            android:text="ĐĂNG NHẬP"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:gravity="center"
+            android:text="Tài khoản mẫu thử nghiệm (Mật khẩu: 123456):\n• SV2026001 (Sinh viên)\n• GV001 (Giảng viên)\n• TECH001 (Kỹ thuật viên)\n• ADMIN001 (Quản trị viên)"
+            android:textColor="#78909C"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</ScrollView>

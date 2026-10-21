@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="vn.edu.unilend.mobile">
+
+    <!-- Quyền truy cập Internet để gọi REST API tới Spring Boot Server -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:label="UniLend - Mượn Trả Thiết Bị"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.Material3.Light.NoActionBar">
+
+        <!-- Màn hình Đăng nhập là màn hình khởi chạy -->
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Màn hình Dashboard phân quyền theo Role -->
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="false" />
+
+    </application>
+
+</manifest>
