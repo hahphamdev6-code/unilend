@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Design tokens from Stitch project "UniLend Mobile" -->
+    <color name="primary">#000000</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#1C1B1B</color>
+    <color name="secondary">#635594</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="secondary_container">#C8B7FE</color>
+    <color name="on_secondary_container">#534583</color>
+    <color name="secondary_fixed">#E8DEFF</color>
+    <color name="secondary_fixed_half">#80E8DEFF</color>
+    <color name="tertiary_fixed_dim">#FDB697</color>
+    <color name="on_tertiary_container">#B2755A</color>
+    <color name="background">#FBF8FF</color>
+    <color name="surface">#FBF8FF</color>
+    <color name="surface_translucent">#CCFBF8FF</color>
+    <color name="surface_container_lowest">#FFFFFF</color>
+    <color name="surface_container_low">#F5F2FB</color>
+    <color name="surface_container">#EFECF5</color>
+    <color name="surface_container_high">#EAE7EF</color>
+    <color name="surface_variant">#E4E1EA</color>
+    <color name="on_surface">#1B1B21</color>
+    <color name="on_surface_variant">#444748</color>
+    <color name="outline">#747878</color>
+    <color name="outline_variant">#C4C7C7</color>
+    <color name="inverse_surface">#303036</color>
+    <color name="error">#BA1A1A</color>
+    <color name="on_error">#FFFFFF</color>
+
+    <!-- Extra one-off colors used in the Stitch screens -->
+    <color name="border_subtle">#1A1B1B21</color>
+    <color name="divider_subtle">#141B1B21</color>
+    <color name="success">#1F8754</color>
+    <color name="live_dot">#34D399</color>
+    <color name="rating_star">#FFD166</color>
+    <color name="ink">#111111</color>
+    <color name="ink_80">#CC111111</color>
+    <color name="white_90">#E6FFFFFF</color>
+    <color name="white_85">#D9FFFFFF</color>
+    <color name="white_20">#33FFFFFF</color>
+    <color name="glow_lavender">#73C8B7FE</color>
+    <color name="glow_peach">#59FDB697</color>
+</resources>

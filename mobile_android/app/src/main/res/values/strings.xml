@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">UniLend</string>
+
+    <!-- Shared auth -->
+    <string name="brand_name">UniLend</string>
+    <string name="action_back">Go back</string>
+    <string name="action_help">Help</string>
+    <string name="label_email">Email Address</string>
+    <string name="label_password">Password</string>
+    <string name="hint_email">you@example.com</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="coming_soon">Coming soon</string>
+
+    <!-- Login -->
+    <string name="login_hero_badge">4.9 · Verified Community</string>
+    <string name="login_hero_shared">50k+ items shared safely</string>
+    <string name="login_hero_insured">Insured</string>
+    <string name="login_hero_title">Good Things Are\nBetter Shared.</string>
+    <string name="login_hero_subtitle">Rent what you need. Share what you own.</string>
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Sign in to continue your UniLend journey.</string>
+    <string name="hint_password_login">Enter your password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="or_continue_with">OR CONTINUE WITH</string>
+    <string name="login_new_user">New to UniLend?</string>
+    <string name="login_create_account"><u>Create an account</u></string>
+    <string name="login_legal">By signing in, you agree to our <u>Terms of Service</u> &amp; <u>Privacy Policy</u>.</string>
+    <string name="login_success">Signed in successfully</string>
+
+    <!-- Register -->
+    <string name="register_hero_insured">Insured &amp; Protected</string>
+    <string name="register_hero_rating">4.9★</string>
+    <string name="register_hero_chip">Campus &amp; Community Sharing</string>
+    <string name="register_hero_title">Start Sharing. Start Earning.</string>
+    <string name="register_hero_subtitle">Join UniLend and make more of what you own.</string>
+    <string name="register_title">Create your account</string>
+    <string name="register_step">Step 1 of 2</string>
+    <string name="label_full_name">Full Name</string>
+    <string name="hint_full_name">Enter your full name</string>
+    <string name="hint_password_register">Create a strong password</string>
+    <string name="label_confirm_password">Confirm Password</string>
+    <string name="hint_confirm_password">Re-enter your password</string>
+    <string name="password_strength_label">Security Strength</string>
+    <string name="strength_none">—</string>
+    <string name="strength_weak">Weak</string>
+    <string name="strength_fair">Fair</string>
+    <string name="strength_good">Good</string>
+    <string name="strength_strong">Strong</string>
+    <string name="register_terms">I agree to the <b><u>Terms of Service</u></b> and <b><u>Privacy Policy</u></b></string>
+    <string name="action_create_account">Create Account</string>
+    <string name="or_sign_up_with">OR SIGN UP WITH</string>
+    <string name="register_have_account">Already have an account?</string>
+    <string name="register_sign_in"><u>Sign in</u></string>
+    <string name="register_success">Account created! Please sign in.</string>
+
+    <!-- Validation -->
+    <string name="error_full_name_required">Please enter your full name</string>
+    <string name="error_email_required">Please enter your email</string>
+    <string name="error_email_invalid">Please enter a valid email address</string>
+    <string name="error_password_required">Please enter your password</string>
+    <string name="error_password_short">Password must be at least 8 characters</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_terms_required">Please accept the Terms of Service and Privacy Policy</string>
+</resources>

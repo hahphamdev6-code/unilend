@@ -1,0 +1,157 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Mobile_android" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Colors mapped from the Stitch "UniLend Mobile" design system -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outline_variant</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/on_error</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:fontFamily">@font/plus_jakarta_sans</item>
+        <item name="fontFamily">@font/plus_jakarta_sans</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.Mobile_android" parent="Base.Theme.Mobile_android" />
+
+    <!-- ===== Text appearances (Stitch typography scale) ===== -->
+    <style name="TextAppearance.UniLend.HeadlineMd" parent="">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">@color/on_surface</item>
+    </style>
+
+    <style name="TextAppearance.UniLend.HeadlineSm" parent="">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/on_surface</item>
+    </style>
+
+    <style name="TextAppearance.UniLend.BodyMd" parent="">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+    </style>
+
+    <style name="TextAppearance.UniLend.BodySm" parent="">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+    </style>
+
+    <style name="TextAppearance.UniLend.LabelLg" parent="">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_semibold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="TextAppearance.UniLend.LabelMd" parent="">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_medium</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@color/on_surface</item>
+    </style>
+
+    <style name="TextAppearance.UniLend.LabelSm" parent="">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_semibold</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <!-- ===== Widgets ===== -->
+    <style name="Widget.UniLend.FieldLabel" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.UniLend.LabelMd</item>
+    </style>
+
+    <style name="Widget.UniLend.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="hintEnabled">false</item>
+        <item name="boxBackgroundColor">@color/surface_container_lowest</item>
+        <item name="boxStrokeColor">@color/input_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="startIconTint">@color/outline</item>
+        <item name="endIconTint">@color/outline</item>
+        <item name="android:textColorHint">@color/outline</item>
+    </style>
+
+    <style name="Widget.UniLend.EditText" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+        <item name="android:minHeight">50dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:fontFamily">@font/plus_jakarta_sans_regular</item>
+    </style>
+
+    <style name="Widget.UniLend.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:layout_height">52dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:textColor">@color/on_primary</item>
+        <item name="android:textAppearance">@style/TextAppearance.UniLend.LabelLg</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="icon">@drawable/ic_arrow_forward</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="iconSize">18dp</item>
+        <item name="iconPadding">8dp</item>
+        <item name="iconTint">@color/on_primary</item>
+        <item name="android:elevation">6dp</item>
+    </style>
+
+    <style name="Widget.UniLend.Button.Google" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_height">50dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@color/surface_container_lowest</item>
+        <item name="strokeColor">@color/border_subtle</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:textAppearance">@style/TextAppearance.UniLend.LabelLg</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="icon">@drawable/ic_google</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">16dp</item>
+        <item name="iconPadding">12dp</item>
+        <item name="iconTint">@null</item>
+    </style>
+
+    <style name="Widget.UniLend.TopBarAction" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAppearance">@style/TextAppearance.UniLend.LabelMd</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+    </style>
+
+    <style name="Widget.UniLend.HomeNavItem" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">3dp</item>
+        <item name="android:drawableTint">@color/outline</item>
+        <item name="android:fontFamily">@font/plus_jakarta_sans_medium</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+</resources>
