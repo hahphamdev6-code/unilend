@@ -5,9 +5,95 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/bg_auth_ambient"
     tools:context=".MainActivity">
 
+    <!-- 1. Fixed Top App Bar (Sticky Header respecting Status Bar insets) -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_top_bar"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Elena Profile Picture -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgProfileAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Elena profile picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_elena_avatar"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+            app:strokeColor="@color/surface_container_lowest"
+            app:strokeWidth="2dp" />
+
+        <!-- Student & Greeting Title -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/plus_jakarta_sans_medium"
+                android:text="UniLend • Tech Commons"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/tvGreetingName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:fontFamily="@font/plus_jakarta_sans_bold"
+                android:text="Good morning, Elena 👋"
+                android:textColor="@color/on_surface"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- Notification Bell Button -->
+        <FrameLayout
+            android:id="@+id/notificationButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_welcome_pill"
+            android:clickable="true"
+            android:contentDescription="Notifications"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_gravity="center"
+                android:contentDescription=""
+                android:src="@drawable/ic_notifications"
+                app:tint="@color/on_surface" />
+
+            <!-- Unread dot -->
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_dot" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- 2. Scrollable Content (Strictly Below Fixed Top Bar) -->
     <ScrollView
         android:id="@+id/homeScroll"
         android:layout_width="0dp"
@@ -15,81 +101,26 @@
         android:clipToPadding="false"
         android:fillViewport="true"
         android:overScrollMode="never"
-        android:paddingBottom="18dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        android:paddingBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/topBar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingTop="18dp"
-            android:paddingEnd="20dp">
+            android:paddingTop="12dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Good morning,"
-                        android:textColor="@color/on_surface_variant"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/tvGreetingName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:fontFamily="@font/plus_jakarta_sans_bold"
-                        android:text="Let's find something good"
-                        android:textColor="@color/on_surface"
-                        android:textSize="21sp" />
-                </LinearLayout>
-
-                <FrameLayout
-                    android:id="@+id/notificationButton"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
-                    android:background="@drawable/bg_pill"
-                    android:contentDescription="Notifications">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:contentDescription=""
-                        android:src="@drawable/ic_notifications"
-                        app:tint="@color/on_surface" />
-
-                    <View
-                        android:layout_width="9dp"
-                        android:layout_height="9dp"
-                        android:layout_gravity="top|end"
-                        android:layout_marginTop="9dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@drawable/bg_dot" />
-                </FrameLayout>
-            </LinearLayout>
-
+            <!-- Search Bar -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 app:cardBackgroundColor="@color/surface_container_lowest"
-                app:cardCornerRadius="14dp"
+                app:cardCornerRadius="25dp"
                 app:cardElevation="0dp"
                 app:strokeColor="@color/border_subtle"
                 app:strokeWidth="1dp">
@@ -99,8 +130,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp">
+                    android:paddingStart="16dp"
+                    android:paddingEnd="10dp">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -113,23 +144,73 @@
                         android:id="@+id/searchInput"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="11dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="6dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:hint="Search cameras, audio, and more"
+                        android:fontFamily="@font/plus_jakarta_sans_regular"
+                        android:hint="Search equipment, model, or asset code..."
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:singleLine="true"
                         android:textColor="@color/on_surface"
                         android:textColorHint="@color/outline"
                         android:textSize="13sp" />
+
+                    <!-- Clear search button -->
+                    <ImageButton
+                        android:id="@+id/btnClearSearch"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="Clear search"
+                        android:src="@drawable/ic_close"
+                        android:visibility="gone"
+                        app:tint="@color/outline" />
+
+                    <!-- Filter Button with active indicator -->
+                    <FrameLayout
+                        android:id="@+id/btnFilter"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:background="@drawable/bg_pill"
+                        android:backgroundTint="@color/surface_container_low"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/iconFilter"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="Filter"
+                            android:src="@drawable/ic_tune"
+                            app:tint="@color/on_surface" />
+
+                        <View
+                            android:id="@+id/filterActiveBadge"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_gravity="top|end"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:background="@drawable/bg_dot"
+                            android:backgroundTint="@color/secondary"
+                            android:visibility="gone" />
+                    </FrameLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Category Filter Chips -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:scrollbars="none">
 
                 <com.google.android.material.chip.ChipGroup
@@ -137,43 +218,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:chipSpacingHorizontal="8dp"
-                    app:singleLine="true"
+                    app:selectionRequired="true"
                     app:singleSelection="true">
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipAll"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="34dp"
                         android:checked="true"
-                        android:checkable="true"
-                        android:text="All items"
-                        android:textColor="@color/on_surface"
-                        app:chipBackgroundColor="@color/secondary_container"
-                        app:chipCornerRadius="19dp"
+                        android:fontFamily="@font/plus_jakarta_sans_semibold"
+                        android:text="All"
+                        android:textColor="@color/on_primary"
+                        android:textSize="12sp"
+                        app:chipBackgroundColor="@color/primary"
+                        app:chipCornerRadius="17dp"
                         app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipTech"
+                        android:id="@+id/chipProjectors"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="34dp"
                         android:checkable="true"
-                        android:text="Tech"
+                        android:fontFamily="@font/plus_jakarta_sans_semibold"
+                        android:text="Projectors"
+                        android:textColor="@color/on_surface"
+                        android:textSize="12sp"
                         app:chipBackgroundColor="@color/surface_container_lowest"
-                        app:chipCornerRadius="19dp"
-                        app:chipStrokeColor="@color/border_subtle"
-                        app:chipStrokeWidth="1dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipCamera"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:checkable="true"
-                        android:text="Cameras"
-                        app:chipBackgroundColor="@color/surface_container_lowest"
-                        app:chipCornerRadius="19dp"
+                        app:chipCornerRadius="17dp"
                         app:chipStrokeColor="@color/border_subtle"
                         app:chipStrokeWidth="1dp" />
 
@@ -181,281 +254,1732 @@
                         android:id="@+id/chipAudio"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="34dp"
                         android:checkable="true"
+                        android:fontFamily="@font/plus_jakarta_sans_semibold"
                         android:text="Audio"
+                        android:textColor="@color/on_surface"
+                        android:textSize="12sp"
                         app:chipBackgroundColor="@color/surface_container_lowest"
-                        app:chipCornerRadius="19dp"
+                        app:chipCornerRadius="17dp"
+                        app:chipStrokeColor="@color/border_subtle"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipCameras"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:checkable="true"
+                        android:fontFamily="@font/plus_jakarta_sans_semibold"
+                        android:text="Cameras"
+                        android:textColor="@color/on_surface"
+                        android:textSize="12sp"
+                        app:chipBackgroundColor="@color/surface_container_lowest"
+                        app:chipCornerRadius="17dp"
+                        app:chipStrokeColor="@color/border_subtle"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipKits"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:checkable="true"
+                        android:fontFamily="@font/plus_jakarta_sans_semibold"
+                        android:text="IoT"
+                        android:textColor="@color/on_surface"
+                        android:textSize="12sp"
+                        app:chipBackgroundColor="@color/surface_container_lowest"
+                        app:chipCornerRadius="17dp"
                         app:chipStrokeColor="@color/border_subtle"
                         app:chipStrokeWidth="1dp" />
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
+            <!-- 4. "My Borrowing" Overview Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="18dp"
-                app:cardBackgroundColor="@color/primary_container"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="20dp"
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_subtle"
+                app:strokeWidth="1dp">
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <View
-                        android:layout_width="155dp"
-                        android:layout_height="155dp"
-                        android:layout_gravity="end|center_vertical"
-                        android:layout_marginEnd="-14dp"
-                        android:alpha="0.13"
-                        android:background="@drawable/bg_pill" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="vertical"
-                        android:paddingStart="20dp"
-                        android:paddingTop="17dp"
-                        android:paddingEnd="20dp"
-                        android:paddingBottom="17dp">
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription=""
+                            android:src="@drawable/ic_assignment"
+                            app:tint="@color/secondary" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_pill"
-                            android:paddingStart="10dp"
-                            android:paddingTop="5dp"
-                            android:paddingEnd="10dp"
-                            android:paddingBottom="5dp"
-                            android:text="CAMPUS &amp; COMMUNITY"
-                            android:textColor="@color/primary_container"
-                            android:textSize="9sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="230dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
                             android:fontFamily="@font/plus_jakarta_sans_bold"
-                            android:text="Good things are better shared."
-                            android:textColor="@color/on_primary"
-                            android:textSize="22sp" />
+                            android:text="My borrowing"
+                            android:textColor="@color/on_surface"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="Find what you need, right around you."
-                            android:textColor="@color/white_85"
+                            android:background="@drawable/bg_student_badge"
+                            android:fontFamily="@font/plus_jakarta_sans_semibold"
+                            android:paddingStart="10dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="3dp"
+                            android:text="Enrolled Student"
+                            android:textColor="@color/student_pill_text"
                             android:textSize="11sp" />
                     </LinearLayout>
+
+                    <!-- Metrics Grid -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <!-- Metric 1: Active Loan (Sony A7 IV) -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/img_sony_camera"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+                                app:strokeColor="@color/border_subtle"
+                                app:strokeWidth="1dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/plus_jakarta_sans_bold"
+                                    android:text="1 Active"
+                                    android:textColor="@color/on_surface"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/plus_jakarta_sans_regular"
+                                    android:text="Sony A7 IV"
+                                    android:textColor="@color/on_surface_variant"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="1dp" />
+
+                        <!-- Metric 2: Pending Approval (Epson Projector) -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/img_epson_projector"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+                                app:strokeColor="@color/border_subtle"
+                                app:strokeWidth="1dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/plus_jakarta_sans_bold"
+                                    android:text="1 Pending"
+                                    android:textColor="@color/on_surface"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/plus_jakarta_sans_regular"
+                                    android:text="Epson Laser"
+                                    android:textColor="@color/on_surface_variant"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Upcoming Return Deadline Banner (With Sony Camera Thumbnail) -->
+                    <LinearLayout
+                        android:id="@+id/btnViewRequests"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_deadline_card"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_sony_camera"
+                            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+                            app:strokeColor="@color/border_subtle"
+                            app:strokeWidth="1dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="14dp"
+                                    android:layout_height="14dp"
+                                    android:contentDescription=""
+                                    android:src="@drawable/ic_schedule"
+                                    app:tint="@color/secondary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:fontFamily="@font/plus_jakarta_sans_bold"
+                                    android:text="Return: Tomorrow, 5:00 PM"
+                                    android:textColor="@color/on_surface"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Sony Alpha a7 IV (#CAM-204) • Media Tech Center"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:contentDescription=""
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/outline" />
+                    </LinearLayout>
+
+                    <!-- Review Policy Note -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:contentDescription=""
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/outline" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:fontFamily="@font/plus_jakarta_sans_regular"
+                            android:text="Staff review required for new requests • Zero student fees"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 5. Available Equipment Section Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end|bottom"
-                        android:layout_marginEnd="18dp"
-                        android:layout_marginBottom="10dp"
-                        android:alpha="0.9"
-                        android:contentDescription="Shared camera"
-                        android:text="📷"
-                        android:textSize="54sp" />
-                </FrameLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        android:fontFamily="@font/plus_jakarta_sans_bold"
+                        android:text="Available equipment"
+                        android:textColor="@color/on_surface"
+                        android:textSize="18sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/plus_jakarta_sans_bold"
-                    android:text="Popular near you"
-                    android:textColor="@color/on_surface"
-                    android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/tvResultsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:fontFamily="@font/plus_jakarta_sans_regular"
+                        android:text="Reserve university inventory for lab &amp; course projects"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/seeAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="6dp"
-                    android:text="See all"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_bold"
+                    android:text="See all ›"
                     android:textColor="@color/secondary"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
-            <LinearLayout
+            <!-- Active Filter Indicators -->
+            <HorizontalScrollView
+                android:id="@+id/activeFilterScroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:scrollbars="none"
+                android:visibility="gone">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/itemCamera"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/activeFilterChipsContainer"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="7dp"
-                    android:layout_weight="1"
-                    android:tag="tech cameras camera film"
-                    app:cardBackgroundColor="@color/surface_container_lowest"
-                    app:cardCornerRadius="18dp"
-                    app:cardElevation="0dp"
-                    app:strokeColor="@color/border_subtle"
-                    app:strokeWidth="1dp">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="10dp">
+            <!-- Empty State (Shown when search/filter yields 0 items) -->
+            <LinearLayout
+                android:id="@+id/layoutEmptyState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/bg_date_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="28dp"
+                android:visibility="gone">
 
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="116dp"
-                            android:background="@drawable/bg_home_camera">
+                <FrameLayout
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="@drawable/bg_pill"
+                    android:backgroundTint="@color/surface_container_lowest">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:contentDescription="Vintage film camera"
-                                android:text="📷"
-                                android:textSize="53sp" />
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:contentDescription=""
+                        android:src="@drawable/ic_search"
+                        app:tint="@color/outline" />
+                </FrameLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="top|start"
-                                android:layout_margin="8dp"
-                                android:background="@drawable/bg_pill"
-                                android:paddingStart="8dp"
-                                android:paddingTop="4dp"
-                                android:paddingEnd="8dp"
-                                android:paddingBottom="4dp"
-                                android:text="TOP PICK"
-                                android:textColor="@color/on_surface"
-                                android:textSize="8sp"
-                                android:textStyle="bold" />
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="9dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="Vintage film camera"
-                            android:textColor="@color/on_surface"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="$12 / day  ·  ★ 4.9"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/itemHeadphones"
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="7dp"
-                    android:layout_weight="1"
-                    android:tag="tech audio headphones"
-                    app:cardBackgroundColor="@color/surface_container_lowest"
-                    app:cardCornerRadius="18dp"
-                    app:cardElevation="0dp"
-                    app:strokeColor="@color/border_subtle"
-                    app:strokeWidth="1dp">
+                    android:layout_marginTop="14dp"
+                    android:fontFamily="@font/plus_jakarta_sans_bold"
+                    android:text="Không tìm thấy thiết bị"
+                    android:textColor="@color/on_surface"
+                    android:textSize="16sp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/plus_jakarta_sans_regular"
+                    android:gravity="center"
+                    android:text="Không có thiết bị nào phù hợp với bộ lọc hoặc từ khóa tìm kiếm của bạn."
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="12sp" />
 
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="116dp"
-                            android:background="@drawable/bg_home_audio">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:contentDescription="Wireless headphones"
-                                android:text="🎧"
-                                android:textSize="53sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="top|end"
-                                android:layout_margin="8dp"
-                                android:background="@drawable/bg_pill"
-                                android:paddingStart="7dp"
-                                android:paddingTop="4dp"
-                                android:paddingEnd="7dp"
-                                android:paddingBottom="4dp"
-                                android:text="★ 4.8"
-                                android:textColor="@color/on_surface"
-                                android:textSize="9sp" />
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="9dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="Studio headphones"
-                            android:textColor="@color/on_surface"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="$8 / day  ·  0.4 mi"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEmptyReset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/primary"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Xóa bộ lọc &amp; Đặt lại"
+                    android:textAllCaps="false"
+                    android:textColor="@color/on_primary"
+                    android:textSize="12sp"
+                    app:cornerRadius="20dp" />
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnListItem"
-                style="@style/Widget.UniLend.Button.Primary"
+            <!-- 6. Card 1: Epson Projector -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/itemProjector"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
-                android:text="Share an item"
-                app:icon="@drawable/ic_arrow_forward"
-                app:iconGravity="textEnd"
-                app:iconTint="@color/on_primary" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:tag="projectors visual tech epson powerlite laser projector #prj-1042"
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_subtle"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="176dp"
+                        android:background="@color/surface_container_low">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Epson PowerLite Laser Projector"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_epson_projector" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|start"
+                            android:layout_margin="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_category_pill"
+                                android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="Visual Tech"
+                                android:textColor="@color/on_surface"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:background="@drawable/bg_emerald_badge"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp">
+
+                                <View
+                                    android:layout_width="6dp"
+                                    android:layout_height="6dp"
+                                    android:background="@drawable/bg_pill"
+                                    android:backgroundTint="@color/emerald_dot" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                    android:text="In Stock (3)"
+                                    android:textColor="@color/emerald_text"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/bg_asset_tag"
+                            android:fontFamily="@font/plus_jakarta_sans_semibold"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="#PRJ-1042"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="11sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/plus_jakarta_sans_bold"
+                            android:text="Epson PowerLite Laser Projector"
+                            android:textColor="@color/on_surface"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_location_on"
+                                app:tint="@color/outline" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Tech Hub • Room B-12"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/secondary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Staff approval required • Max 3-day loan"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/actionProjector"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="@font/plus_jakarta_sans_medium"
+                            android:text="Request to borrow"
+                            android:textAllCaps="false"
+                            android:textColor="@color/on_primary"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/primary"
+                            app:cornerRadius="23dp"
+                            app:elevation="0dp"
+                            app:icon="@drawable/ic_add_circle"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/on_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 7. Card 2: RØDE Wireless Microphones -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/itemMicrophone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="20dp"
+                android:tag="audio microphones rode wireless go ii dual mic kit #aud-3081"
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_subtle"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="176dp"
+                        android:background="@color/surface_container_low">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="RØDE Wireless GO II Dual Mic Kit"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_rode_mic" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|start"
+                            android:layout_margin="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_category_pill"
+                                android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="Audio Gear"
+                                android:textColor="@color/on_surface"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:background="@drawable/bg_emerald_badge"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp">
+
+                                <View
+                                    android:layout_width="6dp"
+                                    android:layout_height="6dp"
+                                    android:background="@drawable/bg_pill"
+                                    android:backgroundTint="@color/emerald_dot" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                    android:text="In Stock (2)"
+                                    android:textColor="@color/emerald_text"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/bg_asset_tag"
+                            android:fontFamily="@font/plus_jakarta_sans_semibold"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="#AUD-3081"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="11sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/plus_jakarta_sans_bold"
+                            android:text="RØDE Wireless GO II Dual Mic Kit"
+                            android:textColor="@color/on_surface"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_location_on"
+                                app:tint="@color/outline" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Media Commons • Room 302"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/secondary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Staff approval required • Max 48-hr loan"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/actionMicrophone"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="@font/plus_jakarta_sans_medium"
+                            android:text="Request to borrow"
+                            android:textAllCaps="false"
+                            android:textColor="@color/on_primary"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/primary"
+                            app:cornerRadius="23dp"
+                            app:elevation="0dp"
+                            app:icon="@drawable/ic_add_circle"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/on_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 8. Card 3: Raspberry Pi 4 Practice Kit -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/itemKit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="20dp"
+                android:tag="iot &amp; robotics lab kits raspberry pi 4 practice kit #iot-5519"
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_subtle"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="176dp"
+                        android:background="@color/surface_container_low">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Raspberry Pi 4 Practice Kit"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_raspberry_pi" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|start"
+                            android:layout_margin="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_category_pill"
+                                android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="IoT &amp; Robotics"
+                                android:textColor="@color/on_surface"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:background="@drawable/bg_emerald_badge"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp">
+
+                                <View
+                                    android:layout_width="6dp"
+                                    android:layout_height="6dp"
+                                    android:background="@drawable/bg_pill"
+                                    android:backgroundTint="@color/emerald_dot" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                    android:text="In Stock (5)"
+                                    android:textColor="@color/emerald_text"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/bg_asset_tag"
+                            android:fontFamily="@font/plus_jakarta_sans_semibold"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="#IOT-5519"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="11sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/plus_jakarta_sans_bold"
+                            android:text="Raspberry Pi 4 Practice Kit"
+                            android:textColor="@color/on_surface"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_location_on"
+                                app:tint="@color/outline" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Makerspace • Lab 108"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/secondary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Staff approval required • Max 7-day loan"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/actionKit"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="@font/plus_jakarta_sans_medium"
+                            android:text="Request to borrow"
+                            android:textAllCaps="false"
+                            android:textColor="@color/on_primary"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/primary"
+                            app:cornerRadius="23dp"
+                            app:elevation="0dp"
+                            app:icon="@drawable/ic_add_circle"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/on_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 9. Card 4: Sony Alpha a7 IV Mirrorless Camera -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/itemCamera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="20dp"
+                android:tag="cameras photo &amp; video sony alpha a7 iv mirrorless camera #cam-204"
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_subtle"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="176dp"
+                        android:background="@color/surface_container_low">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Sony Alpha a7 IV Camera"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_sony_camera" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|start"
+                            android:layout_margin="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_category_pill"
+                                android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="Photo &amp; Video"
+                                android:textColor="@color/on_surface"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:background="@drawable/bg_emerald_badge"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp">
+
+                                <View
+                                    android:layout_width="6dp"
+                                    android:layout_height="6dp"
+                                    android:background="@drawable/bg_pill"
+                                    android:backgroundTint="@color/emerald_dot" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                    android:text="In Stock (2)"
+                                    android:textColor="@color/emerald_text"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/bg_asset_tag"
+                            android:fontFamily="@font/plus_jakarta_sans_semibold"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="#CAM-204"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="11sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/plus_jakarta_sans_bold"
+                            android:text="Sony Alpha a7 IV Mirrorless Camera"
+                            android:textColor="@color/on_surface"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_location_on"
+                                app:tint="@color/outline" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Media Tech Center • Room 204"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/secondary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Staff approval required • Max 3-day loan"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/actionCamera"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="@font/plus_jakarta_sans_medium"
+                            android:text="Request to borrow"
+                            android:textAllCaps="false"
+                            android:textColor="@color/on_primary"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/primary"
+                            app:cornerRadius="23dp"
+                            app:elevation="0dp"
+                            app:icon="@drawable/ic_add_circle"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/on_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 10. Card 5: DJI Air 3 Drone Kit -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/itemDrone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="20dp"
+                android:tag="cameras photo &amp; video dji air 3 fly more combo drone quadcopter #drn-4012"
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_subtle"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="176dp"
+                        android:background="@color/surface_container_low">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="DJI Air 3 Drone"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_dji_drone" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|start"
+                            android:layout_margin="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_category_pill"
+                                android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="Drone &amp; Aerial"
+                                android:textColor="@color/on_surface"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:background="@drawable/bg_emerald_badge"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp">
+
+                                <View
+                                    android:layout_width="6dp"
+                                    android:layout_height="6dp"
+                                    android:background="@drawable/bg_pill"
+                                    android:backgroundTint="@color/emerald_dot" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                    android:text="In Stock (2)"
+                                    android:textColor="@color/emerald_text"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/bg_asset_tag"
+                            android:fontFamily="@font/plus_jakarta_sans_semibold"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="#DRN-4012"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="11sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/plus_jakarta_sans_bold"
+                            android:text="DJI Air 3 Fly More Combo Drone"
+                            android:textColor="@color/on_surface"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_location_on"
+                                app:tint="@color/outline" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Media Tech Center • Drone Hub"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/secondary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Pilot endorsement required • Max 3-day loan"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/actionDrone"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="@font/plus_jakarta_sans_medium"
+                            android:text="Request to borrow"
+                            android:textAllCaps="false"
+                            android:textColor="@color/on_primary"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/primary"
+                            app:cornerRadius="23dp"
+                            app:elevation="0dp"
+                            app:icon="@drawable/ic_add_circle"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/on_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 11. Card 6: Apple MacBook Pro 16" -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/itemMacBook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="20dp"
+                android:tag="iot &amp; robotics computing apple macbook pro 16 m3 max laptop workstation #lap-8821"
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_subtle"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="176dp"
+                        android:background="@color/surface_container_low">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Apple MacBook Pro 16 inch"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_macbook_pro" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|start"
+                            android:layout_margin="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_category_pill"
+                                android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="Computing Labs"
+                                android:textColor="@color/on_surface"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:background="@drawable/bg_emerald_badge"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp">
+
+                                <View
+                                    android:layout_width="6dp"
+                                    android:layout_height="6dp"
+                                    android:background="@drawable/bg_pill"
+                                    android:backgroundTint="@color/emerald_dot" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                    android:text="In Stock (4)"
+                                    android:textColor="@color/emerald_text"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/bg_asset_tag"
+                            android:fontFamily="@font/plus_jakarta_sans_semibold"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="#LAP-8821"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="11sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/plus_jakarta_sans_bold"
+                            android:text="Apple MacBook Pro 16&quot; M3 Max"
+                            android:textColor="@color/on_surface"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_location_on"
+                                app:tint="@color/outline" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Software Innovation Lab • B-04"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/secondary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Staff approval required • Max 5-day loan"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/actionMacBook"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="@font/plus_jakarta_sans_medium"
+                            android:text="Request to borrow"
+                            android:textAllCaps="false"
+                            android:textColor="@color/on_primary"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/primary"
+                            app:cornerRadius="23dp"
+                            app:elevation="0dp"
+                            app:icon="@drawable/ic_add_circle"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/on_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 12. Card 7: Bose S1 Pro+ Speaker -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/itemSpeaker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="20dp"
+                android:tag="audio microphones bose s1 pro+ portable pa speaker system sound #aud-1105"
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_subtle"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="176dp"
+                        android:background="@color/surface_container_low">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Bose S1 Pro+ PA Speaker"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/img_bose_speaker" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|start"
+                            android:layout_margin="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_category_pill"
+                                android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="Audio Gear"
+                                android:textColor="@color/on_surface"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:background="@drawable/bg_emerald_badge"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp">
+
+                                <View
+                                    android:layout_width="6dp"
+                                    android:layout_height="6dp"
+                                    android:background="@drawable/bg_pill"
+                                    android:backgroundTint="@color/emerald_dot" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                                    android:text="In Stock (3)"
+                                    android:textColor="@color/emerald_text"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/bg_asset_tag"
+                            android:fontFamily="@font/plus_jakarta_sans_semibold"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="#AUD-1105"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="11sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/plus_jakarta_sans_bold"
+                            android:text="Bose S1 Pro+ Portable PA Speaker"
+                            android:textColor="@color/on_surface"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_location_on"
+                                app:tint="@color/outline" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Auditorium Sound Booth • Floor 1"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/bg_guidelines_box"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription=""
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/secondary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="@font/plus_jakarta_sans_regular"
+                                android:text="Event registration required • Max 48-hr loan"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/actionSpeaker"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="@font/plus_jakarta_sans_medium"
+                            android:text="Request to borrow"
+                            android:textAllCaps="false"
+                            android:textColor="@color/on_primary"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/primary"
+                            app:cornerRadius="23dp"
+                            app:elevation="0dp"
+                            app:icon="@drawable/ic_add_circle"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/on_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
 
+    <!-- 10. Floating Bottom Navigation Island -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
-        android:layout_height="68dp"
-        app:cardBackgroundColor="@color/surface_container_lowest"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="0dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        app:cardBackgroundColor="@color/surface_translucent"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="8dp"
         app:strokeColor="@color/border_subtle"
         app:strokeWidth="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -466,31 +1990,42 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
 
+            <!-- Explore (Active) -->
             <TextView
                 android:id="@+id/navExplore"
                 style="@style/Widget.UniLend.HomeNavItem"
-                android:drawableTop="@drawable/ic_home"
+                android:background="@drawable/bg_nav_active"
+                android:drawableTop="@drawable/ic_explore"
+                android:drawableTint="@color/on_primary"
                 android:text="Explore"
-                android:textColor="@color/secondary" />
+                android:textColor="@color/on_primary" />
 
+            <!-- Saved -->
             <TextView
                 android:id="@+id/navSaved"
                 style="@style/Widget.UniLend.HomeNavItem"
-                android:drawableTop="@drawable/ic_favorite"
+                android:drawableTop="@drawable/ic_bookmark"
+                android:drawableTint="@color/outline"
                 android:text="Saved" />
 
+            <!-- Bookings -->
             <TextView
                 android:id="@+id/navBookings"
                 style="@style/Widget.UniLend.HomeNavItem"
                 android:drawableTop="@drawable/ic_calendar"
+                android:drawableTint="@color/outline"
                 android:text="Bookings" />
 
+            <!-- Profile -->
             <TextView
                 android:id="@+id/navProfile"
                 style="@style/Widget.UniLend.HomeNavItem"
                 android:drawableTop="@drawable/ic_person"
+                android:drawableTint="@color/outline"
                 android:text="Profile" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/filterBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_top_bar"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="24dp">
+
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_pill"
+        android:backgroundTint="@color/outline_variant" />
+
+    <!-- Sheet Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/plus_jakarta_sans_bold"
+            android:text="Bộ lọc thiết bị"
+            android:textColor="@color/on_surface"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/btnCloseFilter"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_pill"
+            android:backgroundTint="@color/surface_container_low"
+            android:contentDescription="Close"
+            android:src="@drawable/ic_close"
+            app:tint="@color/on_surface" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/divider_subtle" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="420dp"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp">
+
+            <!-- 1. Tình trạng kho hàng -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/plus_jakarta_sans_bold"
+                android:text="Tình trạng kho hàng"
+                android:textColor="@color/on_surface"
+                android:textSize="13sp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/filterStockGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:chipSpacingHorizontal="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStockAll"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checked="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Tất cả"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStockAvailable"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Còn sẵn trong kho"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- 2. Thời gian mượn tối đa -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="@font/plus_jakarta_sans_bold"
+                android:text="Thời gian mượn tối đa"
+                android:textColor="@color/on_surface"
+                android:textSize="13sp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/filterDurationGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:chipSpacingHorizontal="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDurationAll"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checked="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Tất cả thời hạn"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDurationShort"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="≤ 2 ngày (Ngắn hạn)"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDurationMedium"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="3 - 5 ngày (Tiêu chuẩn)"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDurationLong"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="7 ngày (Dài hạn)"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- 3. Khu vực phòng máy -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="@font/plus_jakarta_sans_bold"
+                android:text="Khu vực phòng máy"
+                android:textColor="@color/on_surface"
+                android:textSize="13sp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/filterLocationGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:chipSpacingHorizontal="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipLocAll"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checked="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Tất cả cơ sở"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipLocTechHub"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Tech Hub (B-12)"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipLocMedia"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Media Tech Center"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipLocMakerspace"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Makerspace (Lab 108)"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipLocInnovation"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Innovation Lab (B-04)"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- 4. Sắp xếp theo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="@font/plus_jakarta_sans_bold"
+                android:text="Sắp xếp theo"
+                android:textColor="@color/on_surface"
+                android:textSize="13sp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/filterSortGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:chipSpacingHorizontal="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortDefault"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checked="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Mặc định (Đề xuất)"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortName"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Tên thiết bị (A → Z)"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortStock"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
+                    android:text="Số lượng tồn kho"
+                    android:textColor="@color/on_surface"
+                    android:textSize="12sp"
+                    app:chipCornerRadius="17dp" />
+            </com.google.android.material.chip.ChipGroup>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Action Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnResetFilters"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/plus_jakarta_sans_bold"
+            android:text="Thiết lập lại"
+            android:textAllCaps="false"
+            android:textColor="@color/on_surface"
+            android:textSize="13sp"
+            app:cornerRadius="23dp"
+            app:strokeColor="@color/border_subtle" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnApplyFilters"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1.4"
+            android:backgroundTint="@color/primary"
+            android:fontFamily="@font/plus_jakarta_sans_bold"
+            android:text="Áp dụng bộ lọc"
+            android:textAllCaps="false"
+            android:textColor="@color/on_primary"
+            android:textSize="13sp"
+            app:cornerRadius="23dp" />
+    </LinearLayout>
+
+</LinearLayout>

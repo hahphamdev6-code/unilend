@@ -17,7 +17,7 @@
     <color name="on_tertiary_container">#B2755A</color>
     <color name="background">#FBF8FF</color>
     <color name="surface">#FBF8FF</color>
-    <color name="surface_translucent">#CCFBF8FF</color>
+    <color name="surface_translucent">#D9FFFFFF</color>
     <color name="surface_container_lowest">#FFFFFF</color>
     <color name="surface_container_low">#F5F2FB</color>
     <color name="surface_container">#EFECF5</color>
@@ -30,6 +30,16 @@
     <color name="inverse_surface">#303036</color>
     <color name="error">#BA1A1A</color>
     <color name="on_error">#FFFFFF</color>
+
+    <!-- Emerald / Stock status colors -->
+    <color name="emerald_bg">#ECFDF5</color>
+    <color name="emerald_text">#065F46</color>
+    <color name="emerald_dot">#059669</color>
+    <color name="emerald_border">#80A7F3D0</color>
+
+    <!-- Lavender student pill -->
+    <color name="student_pill_bg">#26C8B7FE</color>
+    <color name="student_pill_text">#534583</color>
 
     <!-- Extra one-off colors used in the Stitch screens -->
     <color name="border_subtle">#1A1B1B21</color>
