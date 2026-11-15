@@ -36,6 +36,9 @@
             android:name=".MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".StaffDashboardActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
