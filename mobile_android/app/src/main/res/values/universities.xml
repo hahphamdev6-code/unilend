@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Gợi ý trường đại học tại Việt Nam cho trường "Trường học (tùy chọn)" trong hồ sơ.
+         Người dùng vẫn có thể nhập tự do nếu trường của họ không có trong danh sách. -->
+    <string-array name="vn_universities">
+        <!-- Hà Nội -->
+        <item>Đại học Quốc gia Hà Nội (VNU)</item>
+        <item>Trường Đại học Công nghệ – ĐHQGHN (UET)</item>
+        <item>Trường Đại học Khoa học Tự nhiên – ĐHQGHN (HUS)</item>
+        <item>Trường Đại học Khoa học Xã hội và Nhân văn – ĐHQGHN (USSH)</item>
+        <item>Trường Đại học Ngoại ngữ – ĐHQGHN (ULIS)</item>
+        <item>Trường Đại học Kinh tế – ĐHQGHN (UEB)</item>
+        <item>Trường Đại học Việt Nhật – ĐHQGHN (VJU)</item>
+        <item>Đại học Bách khoa Hà Nội (HUST)</item>
+        <item>Đại học Kinh tế Quốc dân (NEU)</item>
+        <item>Trường Đại học Ngoại thương (FTU)</item>
+        <item>Học viện Công nghệ Bưu chính Viễn thông (PTIT)</item>
+        <item>Trường Đại học Xây dựng Hà Nội (HUCE)</item>
+        <item>Trường Đại học Giao thông Vận tải (UTC)</item>
+        <item>Trường Đại học Thủy lợi (TLU)</item>
+        <item>Trường Đại học Mỏ – Địa chất (HUMG)</item>
+        <item>Trường Đại học Kiến trúc Hà Nội (HAU)</item>
+        <item>Trường Đại học Công nghiệp Hà Nội (HaUI)</item>
+        <item>Trường Đại học Sư phạm Hà Nội (HNUE)</item>
+        <item>Trường Đại học Y Hà Nội (HMU)</item>
+        <item>Trường Đại học Dược Hà Nội (HUP)</item>
+        <item>Trường Đại học Thương mại (TMU)</item>
+        <item>Trường Đại học Hà Nội (HANU)</item>
+        <item>Trường Đại học Luật Hà Nội (HLU)</item>
+        <item>Học viện Ngân hàng (BA)</item>
+        <item>Học viện Tài chính (AOF)</item>
+        <item>Học viện Ngoại giao (DAV)</item>
+        <item>Học viện Báo chí và Tuyên truyền (AJC)</item>
+        <item>Học viện Kỹ thuật Quân sự (MTA)</item>
+        <item>Học viện Nông nghiệp Việt Nam (VNUA)</item>
+        <item>Trường Đại học Phenikaa</item>
+        <item>Trường Đại học FPT</item>
+        <item>Trường Đại học VinUni</item>
+        <item>Trường Đại học Thăng Long</item>
+        <item>Trường Đại học Đại Nam</item>
+        <!-- TP. Hồ Chí Minh -->
+        <item>Đại học Quốc gia TP. Hồ Chí Minh (VNU-HCM)</item>
+        <item>Trường Đại học Bách khoa – ĐHQG-HCM (HCMUT)</item>
+        <item>Trường Đại học Khoa học Tự nhiên – ĐHQG-HCM (HCMUS)</item>
+        <item>Trường Đại học Khoa học Xã hội và Nhân văn – ĐHQG-HCM (USSH)</item>
+        <item>Trường Đại học Công nghệ Thông tin – ĐHQG-HCM (UIT)</item>
+        <item>Trường Đại học Kinh tế – Luật – ĐHQG-HCM (UEL)</item>
+        <item>Trường Đại học Quốc tế – ĐHQG-HCM (HCMIU)</item>
+        <item>Đại học Kinh tế TP. Hồ Chí Minh (UEH)</item>
+        <item>Trường Đại học Sư phạm Kỹ thuật TP. Hồ Chí Minh (HCMUTE)</item>
+        <item>Trường Đại học Sư phạm TP. Hồ Chí Minh (HCMUE)</item>
+        <item>Trường Đại học Y Dược TP. Hồ Chí Minh (UMP)</item>
+        <item>Trường Đại học Luật TP. Hồ Chí Minh (HCMULAW)</item>
+        <item>Trường Đại học Ngân hàng TP. Hồ Chí Minh (HUB)</item>
+        <item>Trường Đại học Tài chính – Marketing (UFM)</item>
+        <item>Trường Đại học Công nghiệp TP. Hồ Chí Minh (IUH)</item>
+        <item>Trường Đại học Kiến trúc TP. Hồ Chí Minh (UAH)</item>
+        <item>Trường Đại học Giao thông Vận tải TP. Hồ Chí Minh (UTH)</item>
+        <item>Trường Đại học Nông Lâm TP. Hồ Chí Minh (NLU)</item>
+        <item>Trường Đại học Mở TP. Hồ Chí Minh (OU)</item>
+        <item>Trường Đại học Tôn Đức Thắng (TDTU)</item>
+        <item>Trường Đại học Văn Lang (VLU)</item>
+        <item>Trường Đại học Hoa Sen (HSU)</item>
+        <item>Trường Đại học Nguyễn Tất Thành (NTTU)</item>
+        <item>Trường Đại học Công nghệ TP. Hồ Chí Minh (HUTECH)</item>
+        <item>Trường Đại học RMIT Việt Nam</item>
+        <item>Trường Đại học Fulbright Việt Nam</item>
+        <!-- Miền Trung &amp; các tỉnh -->
+        <item>Đại học Đà Nẵng (UD)</item>
+        <item>Trường Đại học Bách khoa – Đại học Đà Nẵng (DUT)</item>
+        <item>Trường Đại học Kinh tế – Đại học Đà Nẵng (DUE)</item>
+        <item>Trường Đại học Duy Tân (DTU)</item>
+        <item>Đại học Huế (HUEUNI)</item>
+        <item>Đại học Thái Nguyên (TNU)</item>
+        <item>Trường Đại học Vinh (VinhUni)</item>
+        <item>Trường Đại học Quy Nhơn (QNU)</item>
+        <item>Trường Đại học Nha Trang (NTU)</item>
+        <item>Trường Đại học Đà Lạt (DLU)</item>
+        <item>Trường Đại học Tây Nguyên (TTN)</item>
+        <item>Trường Đại học Cần Thơ (CTU)</item>
+        <item>Trường Đại học An Giang (AGU)</item>
+        <item>Trường Đại học Hàng hải Việt Nam (VMU)</item>
+        <item>Trường Đại học Hải Phòng (DHP)</item>
+        <item>Trường Đại học Việt Đức (VGU)</item>
+    </string-array>
+</resources>

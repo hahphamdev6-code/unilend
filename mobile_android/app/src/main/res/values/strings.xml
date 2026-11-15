@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">UniLend</string>
+
+    <!-- Dùng chung -->
+    <string name="brand_name">UniLend</string>
+    <string name="action_back">Quay lại</string>
+    <string name="action_help">Trợ giúp</string>
+    <string name="label_email">Email</string>
+    <string name="label_password">Mật khẩu</string>
+    <string name="hint_email">ban@example.com</string>
+    <string name="continue_with_google">Tiếp tục với Google</string>
+    <string name="coming_soon">Sắp ra mắt</string>
+
+    <!-- Đăng nhập -->
+    <string name="login_title">Chào mừng trở lại</string>
+    <string name="login_subtitle">Đăng nhập để tiếp tục sử dụng UniLend.</string>
+    <string name="hint_password_login">Nhập mật khẩu</string>
+    <string name="remember_me">Ghi nhớ đăng nhập</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="action_sign_in">Đăng nhập</string>
+    <string name="or_continue_with">HOẶC</string>
+    <string name="login_new_user">Chưa có tài khoản?</string>
+    <string name="login_create_account"><u>Tạo tài khoản</u></string>
+    <string name="login_legal">Tiếp tục đồng nghĩa bạn đồng ý với <u>Điều khoản</u> &amp; <u>Bảo mật</u>.</string>
+    <string name="login_success">Đăng nhập thành công</string>
+
+    <!-- Đăng ký -->
+    <string name="register_title">Tạo tài khoản</string>
+    <string name="register_step">Bước 1 / 2</string>
+    <string name="label_full_name">Họ và tên</string>
+    <string name="hint_full_name">Nhập họ và tên</string>
+    <string name="hint_password_register">Tạo mật khẩu mạnh</string>
+    <string name="label_confirm_password">Xác nhận mật khẩu</string>
+    <string name="hint_confirm_password">Nhập lại mật khẩu</string>
+    <string name="password_strength_label">Độ mạnh mật khẩu</string>
+    <string name="strength_none">—</string>
+    <string name="strength_weak">Yếu</string>
+    <string name="strength_fair">Trung bình</string>
+    <string name="strength_good">Khá</string>
+    <string name="strength_strong">Mạnh</string>
+    <string name="register_terms">Tôi đồng ý với <b><u>Điều khoản</u></b> và <b><u>Bảo mật</u></b></string>
+    <string name="action_create_account">Tạo tài khoản</string>
+    <string name="or_sign_up_with">HOẶC</string>
+    <string name="register_have_account">Đã có tài khoản?</string>
+    <string name="register_sign_in"><u>Đăng nhập</u></string>
+    <string name="register_success">Tạo tài khoản thành công! Vui lòng đăng nhập.</string>
+
+    <!-- Kiểm tra dữ liệu -->
+    <string name="error_full_name_required">Vui lòng nhập họ và tên</string>
+    <string name="error_email_required">Vui lòng nhập email</string>
+    <string name="error_email_invalid">Email không hợp lệ</string>
+    <string name="error_password_required">Vui lòng nhập mật khẩu</string>
+    <string name="error_password_short">Mật khẩu tối thiểu 8 ký tự</string>
+    <string name="error_password_mismatch">Mật khẩu không khớp</string>
+    <string name="error_terms_required">Vui lòng đồng ý với Điều khoản và Bảo mật</string>
+</resources>

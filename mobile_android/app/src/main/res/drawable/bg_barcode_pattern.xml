@@ -1,0 +1,9 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="32dp"
+    android:viewportWidth="200"
+    android:viewportHeight="32">
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M4,0h2v32h-2z M8,0h1v32h-1z M11,0h3v32h-3z M16,0h1v32h-1z M19,0h4v32h-4z M25,0h2v32h-2z M29,0h1v32h-1z M32,0h3v32h-3z M37,0h2v32h-2z M41,0h1v32h-1z M44,0h4v32h-4z M50,0h2v32h-2z M54,0h1v32h-1z M57,0h3v32h-3z M62,0h2v32h-2z M66,0h1v32h-1z M69,0h4v32h-4z M75,0h1v32h-1z M78,0h2v32h-2z M82,0h3v32h-3z M87,0h1v32h-1z M90,0h4v32h-4z M96,0h2v32h-2z M100,0h1v32h-1z M103,0h3v32h-3z M108,0h2v32h-2z M112,0h1v32h-1z M115,0h4v32h-4z M121,0h2v32h-2z M125,0h1v32h-1z M128,0h3v32h-3z M133,0h2v32h-2z M137,0h1v32h-1z M140,0h4v32h-4z M146,0h1v32h-1z M149,0h2v32h-2z M153,0h3v32h-3z M158,0h1v32h-1z M161,0h4v32h-4z M167,0h2v32h-2z M171,0h1v32h-1z M174,0h3v32h-3z M179,0h2v32h-2z M183,0h1v32h-1z M186,0h4v32h-4z M192,0h2v32h-2z M196,0h2v32h-2z"/>
+</vector>

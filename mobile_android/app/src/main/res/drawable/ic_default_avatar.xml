@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+
+    <!-- Soft neutral slate background -->
+    <path
+        android:fillColor="#94A3B8"
+        android:pathData="M0,0h96v96h-96z" />
+
+    <!-- White human silhouette: head -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,22a14,14 0 1,1 0,28a14,14 0 1,1 0,-28z" />
+
+    <!-- White human silhouette: shoulders -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,96C18,74 31,60 48,60C65,60 78,74 78,96Z" />
+</vector>
