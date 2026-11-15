@@ -138,7 +138,7 @@
                             android:paddingTop="4dp"
                             android:paddingEnd="10dp"
                             android:paddingBottom="4dp"
-                            android:text="Visual Tech"
+                            android:text="Trình chiếu"
                             android:textColor="@color/on_surface"
                             android:textSize="11sp" />
 
@@ -167,7 +167,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
                                 android:fontFamily="@font/plus_jakarta_sans_semibold"
-                                android:text="In Stock (3)"
+                                android:text="Còn sẵn (3)"
                                 android:textColor="@color/emerald_text"
                                 android:textSize="11sp" />
                         </LinearLayout>
@@ -305,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:fontFamily="@font/plus_jakarta_sans_regular"
-                    android:text="Tech Hub • Room B-12 (Central Campus)"
+                    android:text="Tech Hub • Phòng B-12"
                     android:textColor="@color/on_surface_variant"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -330,7 +330,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:fontFamily="@font/plus_jakarta_sans_regular"
-                    android:text="Faculty of Information Technology • Multimedia Lab"
+                    android:text="Khoa CNTT • Phòng Đa phương tiện"
                     android:textColor="@color/secondary"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -363,7 +363,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/plus_jakarta_sans_semibold"
-                        android:text="Institutional Student Grant Policy"
+                        android:text="Chính sách mượn sinh viên"
                         android:textColor="@color/on_surface"
                         android:textSize="13sp" />
 
@@ -372,7 +372,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="Max duration: 3 days · Faculty approval required · 0 VNĐ student fee"
+                        android:text="Tối đa 3 ngày · Cần duyệt · Miễn phí"
                         android:textColor="@color/on_surface_variant"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -391,7 +391,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/plus_jakarta_sans_bold"
-                    android:text="Technical Specifications"
+                    android:text="Thông số kỹ thuật"
                     android:textColor="@color/on_surface"
                     android:textSize="16sp" />
 
@@ -399,7 +399,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/plus_jakarta_sans_semibold"
-                    android:text="Lab Tested"
+                    android:text="Đã kiểm định"
                     android:textColor="@color/secondary"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -441,7 +441,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:fontFamily="@font/plus_jakarta_sans_regular"
-                            android:text="Resolution"
+                            android:text="Độ phân giải"
                             android:textColor="@color/on_surface_variant"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -487,7 +487,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:fontFamily="@font/plus_jakarta_sans_regular"
-                            android:text="Brightness"
+                            android:text="Độ sáng"
                             android:textColor="@color/on_surface_variant"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -541,7 +541,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:fontFamily="@font/plus_jakarta_sans_regular"
-                            android:text="Input Ports"
+                            android:text="Cổng kết nối"
                             android:textColor="@color/on_surface_variant"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -587,7 +587,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:fontFamily="@font/plus_jakarta_sans_regular"
-                            android:text="Weight"
+                            android:text="Trọng lượng"
                             android:textColor="@color/on_surface_variant"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -598,7 +598,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/plus_jakarta_sans_bold"
-                        android:text="3.1 kg Portable"
+                        android:text="3.1 kg"
                         android:textColor="@color/on_surface"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -610,7 +610,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:fontFamily="@font/plus_jakarta_sans_bold"
-                android:text="Package Items Included"
+                android:text="Phụ kiện đi kèm"
                 android:textColor="@color/on_surface"
                 android:textSize="14sp" />
 
@@ -644,7 +644,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="HDMI Cable (3m)"
+                        android:text="Cáp HDMI (3m)"
                         android:textColor="@color/on_surface"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -674,7 +674,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="AC Power Cord"
+                        android:text="Dây nguồn AC"
                         android:textColor="@color/on_surface"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -710,7 +710,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="Remote Control"
+                        android:text="Điều khiển từ xa"
                         android:textColor="@color/on_surface"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -740,7 +740,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="Padded Carry Bag"
+                        android:text="Túi đựng"
                         android:textColor="@color/on_surface"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -771,7 +771,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/plus_jakarta_sans_bold"
-                        android:text="Borrow Request Details"
+                        android:text="Thông tin phiếu mượn"
                         android:textColor="@color/on_surface"
                         android:textSize="16sp" />
 
@@ -780,7 +780,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="Official academic registration workflow"
+                        android:text="Đăng ký mượn thiết bị"
                         android:textColor="@color/on_surface_variant"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -794,7 +794,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="4dp"
-                    android:text="Advisor Review"
+                    android:text="Chờ duyệt"
                     android:textColor="@color/on_secondary_container"
                     android:textSize="11sp" />
             </LinearLayout>
@@ -823,7 +823,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="Borrow Date"
+                        android:text="Ngày mượn"
                         android:textColor="@color/on_surface_variant"
                         android:textSize="11sp" />
 
@@ -833,7 +833,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:fontFamily="@font/plus_jakarta_sans_bold"
-                        android:text="Nov 10, 2026"
+                        android:text="10/11/2026"
                         android:textColor="@color/on_surface"
                         android:textSize="13sp" />
 
@@ -842,7 +842,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="09:00 AM"
+                        android:text="09:00"
                         android:textColor="@color/outline"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -860,7 +860,7 @@
                     android:paddingTop="5dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="5dp"
-                    android:text="2 Days"
+                    android:text="2 Ngày"
                     android:textColor="@color/on_secondary_container"
                     android:textSize="11sp" />
 
@@ -880,7 +880,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="Expected Return"
+                        android:text="Ngày trả dự kiến"
                         android:textColor="@color/on_surface_variant"
                         android:textSize="11sp" />
 
@@ -890,7 +890,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:fontFamily="@font/plus_jakarta_sans_bold"
-                        android:text="Nov 12, 2026"
+                        android:text="12/11/2026"
                         android:textColor="@color/on_surface"
                         android:textSize="13sp" />
 
@@ -899,7 +899,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="05:00 PM"
+                        android:text="17:00"
                         android:textColor="@color/outline"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -911,41 +911,57 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/plus_jakarta_sans_semibold"
-                android:text="Purpose of Borrowing"
+                android:text="Mục đích mượn"
                 android:textColor="@color/on_surface"
                 android:textSize="13sp" />
 
             <LinearLayout
                 android:id="@+id/btnSelectPurpose"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/bg_date_card"
+                android:background="@drawable/bg_select_box"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="14dp"
+                android:paddingStart="12dp"
                 android:paddingEnd="12dp">
+
+                <FrameLayout
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_pill"
+                    android:backgroundTint="@color/surface_container_low">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:contentDescription=""
+                        android:src="@drawable/ic_assignment"
+                        app:tint="@color/secondary" />
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/tvSelectedPurpose"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fontFamily="@font/plus_jakarta_sans_regular"
+                    android:fontFamily="@font/plus_jakarta_sans_semibold"
                     android:maxLines="1"
-                    android:text="Graduation Capstone Project / Seminar"
+                    android:text="Đồ án tốt nghiệp / Hội thảo"
                     android:textColor="@color/on_surface"
-                    android:textSize="13sp" />
+                    android:textSize="13.5sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription=""
                     android:src="@drawable/ic_expand_more"
-                    app:tint="@color/outline" />
+                    app:tint="@color/on_surface_variant" />
             </LinearLayout>
 
             <!-- Supervising Faculty Advisor -->
@@ -954,7 +970,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/plus_jakarta_sans_semibold"
-                android:text="Supervising Faculty Advisor"
+                android:text="Giảng viên hướng dẫn"
                 android:textColor="@color/on_surface"
                 android:textSize="13sp" />
 
@@ -972,7 +988,7 @@
                     android:layout_width="44dp"
                     android:layout_height="44dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/img_elena_avatar"
+                    android:src="@drawable/ic_default_avatar"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                     app:strokeColor="@color/border_subtle"
                     app:strokeWidth="1.5dp" />
@@ -995,7 +1011,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/plus_jakarta_sans_bold"
-                            android:text="Dr. Nguyen Van A"
+                            android:text="TS. Nguyễn Văn A"
                             android:textColor="@color/on_surface"
                             android:textSize="13sp" />
 
@@ -1012,7 +1028,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="Dept. of Computer Science • verified"
+                        android:text="Khoa Khoa học Máy tính · Đã xác minh"
                         android:textColor="@color/on_surface_variant"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -1024,7 +1040,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/plus_jakarta_sans_semibold"
-                android:text="Student Notes / Special Requirements"
+                android:text="Ghi chú"
                 android:textColor="@color/on_surface"
                 android:textSize="13sp" />
 
@@ -1064,7 +1080,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/plus_jakarta_sans_regular"
-                    android:text="I confirm that I am an enrolled student and agree to the Campus Lending Regulations and equipment return deadline."
+                    android:text="Tôi đồng ý tuân thủ quy định mượn trả và hoàn trả đúng hạn."
                     android:textColor="@color/on_surface_variant"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -1098,7 +1114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/plus_jakarta_sans_bold"
-                android:text="Loan: 2 Days"
+                android:text="Thời hạn: 2 Ngày"
                 android:textColor="@color/on_surface"
                 android:textSize="15sp" />
 
@@ -1107,7 +1123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:fontFamily="@font/plus_jakarta_sans_semibold"
-                android:text="Free for enrolled students (0 VNĐ)"
+                android:text="Miễn phí cho sinh viên (0 VNĐ)"
                 android:textColor="@color/secondary"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -1120,7 +1136,7 @@
             android:fontFamily="@font/plus_jakarta_sans_bold"
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
-            android:text="Submit Request"
+            android:text="Gửi yêu cầu"
             android:textAllCaps="false"
             android:textColor="@color/on_primary"
             android:textSize="14sp"

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.unilend.dto.auth.AuthResponse;
 import vn.edu.unilend.dto.auth.LoginRequest;
 import vn.edu.unilend.dto.auth.RegisterRequest;
+import vn.edu.unilend.dto.auth.UpdateProfileRequest;
 import vn.edu.unilend.dto.auth.UserProfileDto;
 import vn.edu.unilend.dto.common.ApiResponse;
 import vn.edu.unilend.service.AuthService;
@@ -45,5 +46,17 @@ public class AuthController {
         String userCode = authentication.getName();
         UserProfileDto profile = authService.getCurrentUserProfile(userCode);
         return ResponseEntity.ok(ApiResponse.ok("Thông tin người dùng", profile));
+    }
+
+    /**
+     * API Cập nhật thông tin cá nhân của người dùng đang đăng nhập
+     */
+    @PutMapping("/me")
+    public ResponseEntity<ApiResponse<UserProfileDto>> updateMyProfile(
+            Authentication authentication,
+            @Valid @RequestBody UpdateProfileRequest request
+    ) {
+        UserProfileDto profile = authService.updateProfile(authentication.getName(), request);
+        return ResponseEntity.ok(ApiResponse.ok("Cập nhật thông tin cá nhân thành công", profile));
     }
 }

@@ -5,6 +5,8 @@ import lombok.*;
 import vn.edu.unilend.entity.enums.BorrowStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "borrow_requests")
@@ -30,8 +32,9 @@ public class BorrowRequest {
     @JoinColumn(name = "approver_id")
     private User approver;
 
-    @Column(name = "usage_room_id")
-    private Long usageRoomId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usage_room_id")
+    private Room usageRoom;
 
     @Column(nullable = false)
     private String purpose;
@@ -63,4 +66,22 @@ public class BorrowRequest {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "borrowRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<BorrowRequestItem> items = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        if (status == null) {
+            status = BorrowStatus.PENDING;
+        }
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

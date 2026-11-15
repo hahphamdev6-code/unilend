@@ -39,8 +39,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Các API công khai: Đăng nhập, Đăng ký, Kiểm tra trạng thái Server
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        // Các API công khai: Đăng nhập, Đăng ký, Danh sách khoa
+                        .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/faculties").permitAll()
                         // Phân quyền quản trị hệ thống dành riêng cho ADMIN
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         // Phân quyền quản lý kho / duyệt thiết bị cho ADMIN và TECHNICIAN

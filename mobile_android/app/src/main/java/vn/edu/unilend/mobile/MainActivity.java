@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.SystemBarStyle;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -28,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +37,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import vn.edu.unilend.mobile.data.local.SessionManager;
+import vn.edu.unilend.mobile.data.model.ApiResponse;
+import vn.edu.unilend.mobile.data.model.BorrowRequestDto;
+import vn.edu.unilend.mobile.data.model.EquipmentDto;
+import vn.edu.unilend.mobile.data.remote.ApiClient;
+
 public class MainActivity extends AppCompatActivity {
+
+    public static final String EXTRA_TAB = "extra_tab";
 
     public static class EquipmentItem {
         final View view;
@@ -50,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         final int maxDays;
         final int imageRes;
         final String searchableTags;
+        long equipmentId = -1L;
+        String remoteStatus = "AVAILABLE";
 
         public EquipmentItem(View view, String title, String assetCode, String category, String categoryKey,
                              String location, String campus, String department, int stock, int maxDays,
@@ -70,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private final List<EquipmentItem> allEquipment = new ArrayList<>();
+    private SessionManager sessionManager;
+    private TextView tvGreetingName;
+    private boolean filterOnlyBookmarked = false;
 
     private EditText searchInput;
     private ImageButton btnClearSearch;
@@ -96,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
                 SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT));
         setContentView(R.layout.activity_main);
+        NavTransitions.registerTabSwitch(this);
 
         View topBar = findViewById(R.id.topBar);
         View bottomNavigation = findViewById(R.id.bottomNavigation);
@@ -119,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
             return windowInsets;
         });
 
+        sessionManager = new SessionManager(this);
         initViews();
         setupInventoryData();
         setupListeners();
@@ -126,9 +146,117 @@ public class MainActivity extends AppCompatActivity {
         selectNavigation(R.id.navExplore);
         updateChipStyles();
         filterItems();
+        handleTabExtra(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleTabExtra(intent);
+    }
+
+    private void handleTabExtra(Intent intent) {
+        if (intent == null) return;
+        String tab = intent.getStringExtra(EXTRA_TAB);
+        if ("saved".equals(tab)) {
+            selectNavigation(R.id.navSaved);
+        } else if ("explore".equals(tab)) {
+            selectNavigation(R.id.navExplore);
+        } else if ("bookings".equals(tab)) {
+            openBookings();
+        }
+        intent.removeExtra(EXTRA_TAB);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateGreetingHeader();
+        filterItems();
+        fetchEquipmentsFromServer();
+    }
+
+    private void updateGreetingHeader() {
+        if (tvGreetingName != null) {
+            String fullName = sessionManager.getFullName();
+            if (!fullName.isEmpty()) {
+                String suffix = sessionManager.isStaff() ? " (" + sessionManager.getRole() + ")" : "";
+                tvGreetingName.setText(fullName + suffix);
+            }
+        }
+    }
+
+    private void fetchEquipmentsFromServer() {
+        if (!sessionManager.isLoggedIn()) return;
+        ApiClient.equipment(this).getEquipments(null, null, null, null)
+                .enqueue(new Callback<ApiResponse<List<EquipmentDto>>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<List<EquipmentDto>>> call,
+                                           @NonNull Response<ApiResponse<List<EquipmentDto>>> response) {
+                        if (isFinishing() || isDestroyed()) return;
+                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                            syncRemoteEquipments(response.body().getData());
+                            filterItems();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<List<EquipmentDto>>> call, @NonNull Throwable t) {
+                        // Offline fallback: keep local catalog items interactive
+                    }
+                });
+    }
+
+    private void syncRemoteEquipments(List<EquipmentDto> remoteList) {
+        for (EquipmentDto dto : remoteList) {
+            String remoteName = dto.getName() != null ? dto.getName().toLowerCase(Locale.ROOT) : "";
+            String remoteCode = dto.getEquipmentCode() != null ? dto.getEquipmentCode().toUpperCase(Locale.ROOT) : "";
+            for (EquipmentItem item : allEquipment) {
+                boolean match;
+                if (item.equipmentId > 0) {
+                    match = (dto.getId() != null && item.equipmentId == dto.getId());
+                } else {
+                    match =
+                            (remoteCode.contains("PROJ-001") && item.assetCode.equals("#PRJ-1042")) ||
+                            (remoteCode.contains("AUD-001") && item.assetCode.equals("#AUD-3081")) ||
+                            (remoteCode.contains("IOT-001") && item.assetCode.equals("#IOT-5519")) ||
+                            (remoteCode.contains("CAM-001") && item.assetCode.equals("#CAM-204")) ||
+                            (remoteCode.contains("DRN-001") && item.assetCode.equals("#DRN-4012")) ||
+                            (remoteCode.contains("LAP-001") && item.assetCode.equals("#LAP-8821")) ||
+                            (remoteCode.contains("AUD-002") && item.assetCode.equals("#AUD-1105")) ||
+                            (remoteName.contains("epson") && item.assetCode.equals("#PRJ-1042")) ||
+                            ((remoteName.contains("røde") || remoteName.contains("micro")) && item.assetCode.equals("#AUD-3081")) ||
+                            (remoteName.contains("raspberry") && item.assetCode.equals("#IOT-5519")) ||
+                            (remoteName.contains("sony") && item.assetCode.equals("#CAM-204")) ||
+                            (remoteName.contains("dji") && item.assetCode.equals("#DRN-4012")) ||
+                            (remoteName.contains("macbook") && item.assetCode.equals("#LAP-8821")) ||
+                            (remoteName.contains("bose") && item.assetCode.equals("#AUD-1105"));
+                }
+                if (match) {
+                    if (dto.getId() != null) {
+                        item.equipmentId = dto.getId();
+                    }
+                    if (dto.getStatus() != null) {
+                        item.remoteStatus = dto.getStatus();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private long findEquipmentIdByCode(String assetCode) {
+        for (EquipmentItem item : allEquipment) {
+            if (item.assetCode.equals(assetCode)) {
+                return item.equipmentId;
+            }
+        }
+        return -1L;
     }
 
     private void initViews() {
+        tvGreetingName = findViewById(R.id.tvGreetingName);
         searchInput = findViewById(R.id.searchInput);
         btnClearSearch = findViewById(R.id.btnClearSearch);
         btnFilter = findViewById(R.id.btnFilter);
@@ -239,10 +367,18 @@ public class MainActivity extends AppCompatActivity {
 
         // Header and banner actions
         findViewById(R.id.seeAll).setOnClickListener(v -> resetAllFilters());
-        findViewById(R.id.btnViewRequests).setOnClickListener(v -> openCameraDetail());
-        findViewById(R.id.notificationButton).setOnClickListener(v ->
-                Toast.makeText(this, "Loan alert: Return Sony A7 IV tomorrow at 5:00 PM", Toast.LENGTH_LONG).show()
-        );
+        findViewById(R.id.btnViewRequests).setOnClickListener(v -> {
+            if (sessionManager.isStaff()) {
+                startActivity(new Intent(this, StaffDashboardActivity.class));
+                NavTransitions.applyOpen(this);
+            } else {
+                openBookings();
+            }
+        });
+        findViewById(R.id.notificationButton).setOnClickListener(v -> {
+            startActivity(new Intent(this, NotificationsActivity.class));
+            NavTransitions.applyOpen(this);
+        });
 
         View imgProfileAvatar = findViewById(R.id.imgProfileAvatar);
         if (imgProfileAvatar != null) {
@@ -300,11 +436,27 @@ public class MainActivity extends AppCompatActivity {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View sheet = LayoutInflater.from(this).inflate(R.layout.layout_filter_bottom_sheet, null);
         dialog.setContentView(sheet);
+        dialog.setOnShowListener(d -> {
+            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                bottomSheet.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            }
+        });
 
         ChipGroup stockGroup = sheet.findViewById(R.id.filterStockGroup);
         ChipGroup durationGroup = sheet.findViewById(R.id.filterDurationGroup);
         ChipGroup locationGroup = sheet.findViewById(R.id.filterLocationGroup);
         ChipGroup sortGroup = sheet.findViewById(R.id.filterSortGroup);
+        com.google.android.material.button.MaterialButton btnApply = sheet.findViewById(R.id.btnApplyFilters);
+
+        Runnable updateApplyLabel = () -> {
+            int activeCount = 0;
+            if (stockGroup.getCheckedChipId() == R.id.chipStockAvailable) activeCount++;
+            if (durationGroup.getCheckedChipId() != R.id.chipDurationAll && durationGroup.getCheckedChipId() != View.NO_ID) activeCount++;
+            if (locationGroup.getCheckedChipId() != R.id.chipLocAll && locationGroup.getCheckedChipId() != View.NO_ID) activeCount++;
+            if (sortGroup.getCheckedChipId() != R.id.chipSortDefault && sortGroup.getCheckedChipId() != View.NO_ID) activeCount++;
+            btnApply.setText(activeCount > 0 ? "Áp dụng bộ lọc (" + activeCount + ")" : "Áp dụng bộ lọc");
+        };
 
         // Pre-select current filter states
         if (filterOnlyAvailable) {
@@ -328,6 +480,14 @@ public class MainActivity extends AppCompatActivity {
         else if (filterSortMode == 2) sortGroup.check(R.id.chipSortStock);
         else sortGroup.check(R.id.chipSortDefault);
 
+        updateApplyLabel.run();
+
+        ChipGroup.OnCheckedStateChangeListener countWatcher = (group, checkedIds) -> updateApplyLabel.run();
+        stockGroup.setOnCheckedStateChangeListener(countWatcher);
+        durationGroup.setOnCheckedStateChangeListener(countWatcher);
+        locationGroup.setOnCheckedStateChangeListener(countWatcher);
+        sortGroup.setOnCheckedStateChangeListener(countWatcher);
+
         sheet.findViewById(R.id.btnCloseFilter).setOnClickListener(v -> dialog.dismiss());
 
         sheet.findViewById(R.id.btnResetFilters).setOnClickListener(v -> {
@@ -346,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Đã đặt lại các bộ lọc", Toast.LENGTH_SHORT).show();
         });
 
-        sheet.findViewById(R.id.btnApplyFilters).setOnClickListener(v -> {
+        btnApply.setOnClickListener(v -> {
             filterOnlyAvailable = (stockGroup.getCheckedChipId() == R.id.chipStockAvailable);
 
             int durId = durationGroup.getCheckedChipId();
@@ -389,7 +549,8 @@ public class MainActivity extends AppCompatActivity {
         for (EquipmentItem item : allEquipment) {
             boolean matchesSearch = query.isEmpty() || item.searchableTags.contains(query);
             boolean matchesCategory = selectedCategory.isEmpty() || item.categoryKey.equalsIgnoreCase(selectedCategory);
-            boolean matchesStock = !filterOnlyAvailable || item.stock > 0;
+            boolean matchesStock = !filterOnlyAvailable || (item.stock > 0 && "AVAILABLE".equalsIgnoreCase(item.remoteStatus));
+            boolean matchesBookmark = !filterOnlyBookmarked || sessionManager.isBookmarked(item.assetCode);
 
             boolean matchesDuration = true;
             if (filterDurationMode == 1) { // <= 2 days
@@ -403,7 +564,7 @@ public class MainActivity extends AppCompatActivity {
             boolean matchesLocation = "all".equalsIgnoreCase(filterLocationMode) ||
                     item.campus.equalsIgnoreCase(filterLocationMode);
 
-            boolean isMatch = matchesSearch && matchesCategory && matchesStock && matchesDuration && matchesLocation;
+            boolean isMatch = matchesSearch && matchesCategory && matchesStock && matchesDuration && matchesLocation && matchesBookmark;
             item.view.setVisibility(isMatch ? View.VISIBLE : View.GONE);
 
             if (isMatch) {
@@ -425,12 +586,28 @@ public class MainActivity extends AppCompatActivity {
                 !"all".equalsIgnoreCase(filterLocationMode) || filterSortMode != 0;
 
         filterActiveBadge.setVisibility(hasActiveCustomFilters ? View.VISIBLE : View.GONE);
+        ImageView iconFilter = findViewById(R.id.iconFilter);
+        if (hasActiveCustomFilters) {
+            btnFilter.setBackgroundResource(R.drawable.bg_pill);
+            btnFilter.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primary)));
+            if (iconFilter != null) {
+                iconFilter.setColorFilter(ContextCompat.getColor(this, R.color.on_primary));
+            }
+        } else {
+            btnFilter.setBackgroundResource(R.drawable.bg_select_box);
+            btnFilter.setBackgroundTintList(null);
+            if (iconFilter != null) {
+                iconFilter.setColorFilter(ContextCompat.getColor(this, R.color.on_surface));
+            }
+        }
 
         // Update results label
-        if (!query.isEmpty() || !selectedCategory.isEmpty() || hasActiveCustomFilters) {
-            tvResultsCount.setText("Tìm thấy " + count + " thiết bị phù hợp");
+        if (filterOnlyBookmarked) {
+            tvResultsCount.setText("Đã lưu " + count + " thiết bị");
+        } else if (!query.isEmpty() || !selectedCategory.isEmpty() || hasActiveCustomFilters) {
+            tvResultsCount.setText("Tìm thấy " + count + " thiết bị");
         } else {
-            tvResultsCount.setText("Reserve university inventory for lab & course projects • " + count + " items");
+            tvResultsCount.setText(count + " thiết bị sẵn sàng");
         }
 
         // Empty state handling
@@ -534,6 +711,8 @@ public class MainActivity extends AppCompatActivity {
 
         activeFilterScroll.setVisibility(View.VISIBLE);
         float density = getResources().getDisplayMetrics().density;
+        android.graphics.Typeface semiboldFont = androidx.core.content.res.ResourcesCompat.getFont(
+                this, R.font.plus_jakarta_sans_semibold);
 
         for (int i = 0; i < activeFilterLabels.size(); i++) {
             String label = activeFilterLabels.get(i);
@@ -542,8 +721,8 @@ public class MainActivity extends AppCompatActivity {
             LinearLayout pill = new LinearLayout(this);
             pill.setOrientation(LinearLayout.HORIZONTAL);
             pill.setBackgroundResource(R.drawable.bg_pill);
-            pill.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.surface_container_lowest)));
-            pill.setPadding((int) (10 * density), (int) (4 * density), (int) (8 * density), (int) (4 * density));
+            pill.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.secondary_fixed)));
+            pill.setPadding((int) (12 * density), (int) (6 * density), (int) (10 * density), (int) (6 * density));
             pill.setGravity(android.view.Gravity.CENTER_VERTICAL);
 
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -555,14 +734,14 @@ public class MainActivity extends AppCompatActivity {
 
             TextView tv = new TextView(this);
             tv.setText(label);
-            tv.setTextSize(11);
-            tv.setTextColor(ContextCompat.getColor(this, R.color.on_surface));
-            tv.setFontFeatureSettings("font-family: plus_jakarta_sans_semibold");
+            tv.setTextSize(11.5f);
+            tv.setTextColor(ContextCompat.getColor(this, R.color.on_secondary_container));
+            if (semiboldFont != null) tv.setTypeface(semiboldFont);
             pill.addView(tv);
 
             ImageView ivClose = new ImageView(this);
             ivClose.setImageResource(R.drawable.ic_close);
-            ivClose.setColorFilter(ContextCompat.getColor(this, R.color.outline));
+            ivClose.setColorFilter(ContextCompat.getColor(this, R.color.on_secondary_container));
             LinearLayout.LayoutParams ivLp = new LinearLayout.LayoutParams((int) (14 * density), (int) (14 * density));
             ivLp.setMarginStart((int) (6 * density));
             ivClose.setLayoutParams(ivLp);
@@ -570,6 +749,18 @@ public class MainActivity extends AppCompatActivity {
 
             pill.setOnClickListener(v -> onRemove.run());
             activeFilterChipsContainer.addView(pill);
+        }
+
+        if (activeFilterLabels.size() >= 2) {
+            TextView clearAllPill = new TextView(this);
+            clearAllPill.setText("Xóa tất cả");
+            clearAllPill.setTextSize(11.5f);
+            clearAllPill.setTextColor(ContextCompat.getColor(this, R.color.on_surface_variant));
+            if (semiboldFont != null) clearAllPill.setTypeface(semiboldFont);
+            clearAllPill.setBackgroundResource(R.drawable.bg_select_box);
+            clearAllPill.setPadding((int) (12 * density), (int) (6 * density), (int) (12 * density), (int) (6 * density));
+            clearAllPill.setOnClickListener(v -> resetAllFilters());
+            activeFilterChipsContainer.addView(clearAllPill);
         }
     }
 
@@ -580,196 +771,207 @@ public class MainActivity extends AppCompatActivity {
         filterDurationMode = 0;
         filterLocationMode = "all";
         filterSortMode = 0;
+        if (filterOnlyBookmarked) {
+            selectNavigation(R.id.navExplore);
+        } else {
+            filterItems();
+        }
         updateChipStyles();
-        filterItems();
         Toast.makeText(this, "Đã xóa toàn bộ bộ lọc", Toast.LENGTH_SHORT).show();
     }
 
     private void openProjectorDetail() {
         Intent intent = new Intent(this, EquipmentDetailActivity.class);
+        intent.putExtra(EquipmentDetailActivity.EXTRA_EQUIPMENT_ID, findEquipmentIdByCode("#PRJ-1042"));
         intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_TITLE, "Epson PowerLite Laser Projector");
         intent.putExtra(EquipmentDetailActivity.EXTRA_ASSET_CODE, "#PRJ-1042");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Visual Tech");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Tech Hub • Room B-12 (Central Campus)");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Faculty of Information Technology • Multimedia Lab");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "In Stock (3)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Trình chiếu");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Tech Hub • Phòng B-12");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Khoa CNTT • Phòng Đa phương tiện");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "Còn sẵn (3)");
         intent.putExtra(EquipmentDetailActivity.EXTRA_IMAGE_RES, R.drawable.img_epson_projector);
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Resolution");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Độ phân giải");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "1080p WUXGA Laser");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Brightness");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Độ sáng");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "4,000 Lumens");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Input Ports");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Cổng kết nối");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "HDMI, USB-C, VGA");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Weight");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "3.1 kg Portable");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Trọng lượng");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "3.1 kg");
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "HDMI Cable (3m)");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "AC Power Cord");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Remote Control");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Padded Carry Bag");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "Cáp HDMI (3m)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "Dây nguồn AC");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Điều khiển từ xa");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Túi đựng");
 
         startActivity(intent);
     }
 
     private void openMicrophoneDetail() {
         Intent intent = new Intent(this, EquipmentDetailActivity.class);
+        intent.putExtra(EquipmentDetailActivity.EXTRA_EQUIPMENT_ID, findEquipmentIdByCode("#AUD-3081"));
         intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_TITLE, "RØDE Wireless GO II Dual Mic Kit");
         intent.putExtra(EquipmentDetailActivity.EXTRA_ASSET_CODE, "#AUD-3081");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Audio Gear");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Media Commons • Room 302");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "School of Journalism & Digital Media");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "In Stock (2)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Âm thanh");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Media Commons • Phòng 302");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Khoa Báo chí & Truyền thông số");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "Còn sẵn (2)");
         intent.putExtra(EquipmentDetailActivity.EXTRA_IMAGE_RES, R.drawable.img_rode_mic);
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Range");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "200m Line of Sight");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Battery Life");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "7 Hours Built-in");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Channels");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "Dual Channel (TX + TX)");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Connection");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Phạm vi");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "200m không vật cản");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Pin");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "7 giờ");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Kênh thu");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "Kép (TX + TX)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Kết nối");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "3.5mm TRS / USB-C");
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "2x Transmitter Units");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "1x Dual Receiver Unit");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "2x Furry Windshields");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "SC5 3.5mm Cable & Bag");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "2x Bộ phát (TX)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "1x Bộ thu (RX)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "2x Bông lọc gió");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Cáp 3.5mm & Túi đựng");
 
         startActivity(intent);
     }
 
     private void openKitDetail() {
         Intent intent = new Intent(this, EquipmentDetailActivity.class);
+        intent.putExtra(EquipmentDetailActivity.EXTRA_EQUIPMENT_ID, findEquipmentIdByCode("#IOT-5519"));
         intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_TITLE, "Raspberry Pi 4 Practice Kit");
         intent.putExtra(EquipmentDetailActivity.EXTRA_ASSET_CODE, "#IOT-5519");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "IoT & Robotics");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "IoT & Robot");
         intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Makerspace • Lab 108");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Department of Embedded Systems & IoT");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "In Stock (5)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Bộ môn Hệ thống nhúng & IoT");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "Còn sẵn (5)");
         intent.putExtra(EquipmentDetailActivity.EXTRA_IMAGE_RES, R.drawable.img_raspberry_pi);
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "RAM Size");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "RAM");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "8GB LPDDR4-3200");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Processor");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Vi xử lý");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "Broadcom 1.5GHz");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Storage");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "64GB MicroSD (Flashed)");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Connectivity");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Lưu trữ");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "64GB MicroSD");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Kết nối");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "Dual Micro-HDMI, WiFi");
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "Breadboard & Jumper Wires");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "Sensor Module Kit");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "USB-C 15W Power Supply");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Protective Acrylic Case");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "Breadboard & Dây nối");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "Bộ module cảm biến");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Nguồn USB-C 15W");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Vỏ bảo vệ Acrylic");
 
         startActivity(intent);
     }
 
     private void openCameraDetail() {
         Intent intent = new Intent(this, EquipmentDetailActivity.class);
+        intent.putExtra(EquipmentDetailActivity.EXTRA_EQUIPMENT_ID, findEquipmentIdByCode("#CAM-204"));
         intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_TITLE, "Sony Alpha a7 IV Mirrorless Camera");
         intent.putExtra(EquipmentDetailActivity.EXTRA_ASSET_CODE, "#CAM-204");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Photo & Video");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Media Tech Center • Room 204");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Faculty of Arts & Media Design");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "In Stock (2)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Máy ảnh & Video");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Media Tech • Phòng 204");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Khoa Nghệ thuật & Thiết kế");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "Còn sẵn (2)");
         intent.putExtra(EquipmentDetailActivity.EXTRA_IMAGE_RES, R.drawable.img_sony_camera);
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Sensor");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Cảm biến");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "33MP Full-Frame Exmor");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Video");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Quay video");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "4K 60p 10-bit 4:2:2");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Autofocus");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "759-point Fast Hybrid");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Mount");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "Sony E-Mount System");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Lấy nét");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "759 điểm Fast Hybrid");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Ngàm ống kính");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "Sony E-Mount");
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "FE 28-70mm f/3.5-5.6 OSS");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "2x NP-FZ100 Batteries");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "128GB UHS-II SD Card");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Peak Design Camera Strap");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "Ống kính FE 28-70mm");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "2x Pin NP-FZ100");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Thẻ nhớ SD 128GB");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Dây đeo máy ảnh");
 
         startActivity(intent);
     }
 
     private void openDroneDetail() {
         Intent intent = new Intent(this, EquipmentDetailActivity.class);
+        intent.putExtra(EquipmentDetailActivity.EXTRA_EQUIPMENT_ID, findEquipmentIdByCode("#DRN-4012"));
         intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_TITLE, "DJI Air 3 Fly More Combo Drone");
         intent.putExtra(EquipmentDetailActivity.EXTRA_ASSET_CODE, "#DRN-4012");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Drone & Aerial");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Media Tech Center • Drone Hub");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "School of Journalism & Digital Media");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "In Stock (2)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Drone");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Media Tech • Khu Drone");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Khoa Báo chí & Truyền thông số");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "Còn sẵn (2)");
         intent.putExtra(EquipmentDetailActivity.EXTRA_IMAGE_RES, R.drawable.img_dji_drone);
 
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Camera");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "Dual 4K HDR 1/1.3\" CMOS");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Flight Time");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "46 Mins Max Duration");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Transmission");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "O4 Video 20km Range");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Sensing");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "Omnidirectional Avoidance");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "Kép 4K HDR CMOS");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Thời gian bay");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "Tối đa 46 phút");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Truyền tín hiệu");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "O4 Video 20km");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Cảm biến");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "Tránh vật cản đa hướng");
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "DJI RC 2 Screen Controller");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "3x Intelligent Flight Batteries");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Battery Charging Hub");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "DJI Shoulder Bag & Spare Props");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "Tay cầm DJI RC 2");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "3x Pin bay thông minh");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Đế sạc pin");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Túi đeo & Cánh dự phòng");
 
         startActivity(intent);
     }
 
     private void openMacBookDetail() {
         Intent intent = new Intent(this, EquipmentDetailActivity.class);
+        intent.putExtra(EquipmentDetailActivity.EXTRA_EQUIPMENT_ID, findEquipmentIdByCode("#LAP-8821"));
         intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_TITLE, "Apple MacBook Pro 16\" M3 Max");
         intent.putExtra(EquipmentDetailActivity.EXTRA_ASSET_CODE, "#LAP-8821");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Computing Labs");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Software Innovation Lab • B-04");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Faculty of Information Technology • AI Lab");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "In Stock (4)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Máy tính");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Lab Phần mềm • Phòng B-04");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Khoa CNTT • AI Lab");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "Còn sẵn (4)");
         intent.putExtra(EquipmentDetailActivity.EXTRA_IMAGE_RES, R.drawable.img_macbook_pro);
 
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Chip");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "Apple M3 Max 16-Core");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Memory");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "64GB Unified RAM");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Storage");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "1TB PCIe NVMe SSD");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Display");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Bộ nhớ");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "64GB RAM");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Lưu trữ");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "1TB NVMe SSD");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Màn hình");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "Liquid Retina XDR 120Hz");
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "140W USB-C Power Adapter");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "MagSafe 3 Braided Cable");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Incase Neoprene Sleeve");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "USB-C Multiport Adapter Hub");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "Sạc USB-C 140W");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "Cáp MagSafe 3");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Túi chống sốc");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Hub chuyển đổi USB-C");
 
         startActivity(intent);
     }
 
     private void openSpeakerDetail() {
         Intent intent = new Intent(this, EquipmentDetailActivity.class);
+        intent.putExtra(EquipmentDetailActivity.EXTRA_EQUIPMENT_ID, findEquipmentIdByCode("#AUD-1105"));
         intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_TITLE, "Bose S1 Pro+ Portable PA Speaker");
         intent.putExtra(EquipmentDetailActivity.EXTRA_ASSET_CODE, "#AUD-1105");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Audio Gear");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Auditorium Sound Booth • Floor 1");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Student Affairs & Event Operations");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "In Stock (3)");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_CATEGORY, "Âm thanh");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_LOCATION, "Hội trường • Tầng 1");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_DEPARTMENT, "Phòng Công tác Sinh viên");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_STOCK_COUNT, "Còn sẵn (3)");
         intent.putExtra(EquipmentDetailActivity.EXTRA_IMAGE_RES, R.drawable.img_bose_speaker);
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Output");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "160W High SPL Clean Audio");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Battery");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "11 Hours Rechargeable");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_LABEL, "Công suất");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_1_VALUE, "160W");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_LABEL, "Pin");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_2_VALUE, "11 giờ");
         intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_LABEL, "Mixer");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "3-Channel with OLED Displays");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Wireless");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "Bluetooth 5.3 + RF Receiver");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_3_VALUE, "3 kênh, màn hình OLED");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_LABEL, "Không dây");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_SPEC_4_VALUE, "Bluetooth 5.3 + RF");
 
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "AC Power Cable");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "Wireless RF Mic Transmitter");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Heavy Duty Speaker Stand");
-        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Slip Cover Carrying Case");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_1, "Dây nguồn AC");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_2, "Bộ phát micro RF");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_3, "Chân đế loa");
+        intent.putExtra(EquipmentDetailActivity.EXTRA_ITEM_4, "Túi bảo vệ loa");
 
         startActivity(intent);
     }
@@ -795,10 +997,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectNavigation(int selectedId) {
-        // Profile is its own screen: open it without moving the highlight off Explore,
-        // so the tab bar is already correct when the user comes back.
+        // Profile and Bookings open a separate screen / modal dialog without moving
+        // the highlight off the active catalog tab (Explore or Saved).
         if (selectedId == R.id.navProfile) {
             openProfile();
+            return;
+        }
+        if (selectedId == R.id.navBookings) {
+            openBookings();
             return;
         }
 
@@ -814,15 +1020,76 @@ public class MainActivity extends AppCompatActivity {
             item.setCompoundDrawableTintList(ColorStateList.valueOf(isSelected ? active : inactive));
         }
 
-        if (selectedId == R.id.navBookings) {
-            Toast.makeText(this, "Active Loans: Sony A7 IV (Due tomorrow 5:00 PM)", Toast.LENGTH_SHORT).show();
+        if (selectedId == R.id.navExplore) {
+            if (filterOnlyBookmarked) {
+                filterOnlyBookmarked = false;
+                filterItems();
+            }
         } else if (selectedId == R.id.navSaved) {
-            Toast.makeText(this, "Saved Items (4)", Toast.LENGTH_SHORT).show();
+            filterOnlyBookmarked = true;
+            filterItems();
         }
     }
 
+    private void showMyBookingsDialog() {
+        if (!sessionManager.isLoggedIn()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để xem phiếu mượn", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ApiClient.borrow(this).getMyBorrowRequests(null)
+                .enqueue(new Callback<ApiResponse<List<BorrowRequestDto>>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<List<BorrowRequestDto>>> call,
+                                           @NonNull Response<ApiResponse<List<BorrowRequestDto>>> response) {
+                        if (isFinishing() || isDestroyed()) return;
+                        StringBuilder sb = new StringBuilder();
+                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                            List<BorrowRequestDto> list = response.body().getData();
+                            if (list.isEmpty()) {
+                                sb.append("Bạn chưa có phiếu mượn nào.");
+                            } else {
+                                for (BorrowRequestDto br : list) {
+                                    String itemNames = "";
+                                    if (br.getItems() != null && !br.getItems().isEmpty()) {
+                                        itemNames = br.getItems().get(0).getEquipmentName();
+                                    }
+                                    sb.append("• ").append(br.getRequestCode())
+                                            .append(" [").append(br.getStatus()).append("]\n  ")
+                                            .append(itemNames).append("\n\n");
+                                }
+                            }
+                        } else {
+                            sb.append("Không tải được danh sách phiếu mượn.");
+                        }
+
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this)
+                                .setTitle("Phiếu mượn của tôi")
+                                .setMessage(sb.toString().trim())
+                                .setPositiveButton("Xem Hồ sơ", (d, w) -> openProfile())
+                                .setNegativeButton("Đóng", null);
+
+                        if (sessionManager.isStaff()) {
+                            builder.setNeutralButton("Quản lý Kho", (d, w) -> {
+                                startActivity(new Intent(MainActivity.this, StaffDashboardActivity.class));
+                                NavTransitions.applyOpen(MainActivity.this);
+                            });
+                        }
+                        builder.show();
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<List<BorrowRequestDto>>> call, @NonNull Throwable t) {
+                        if (isFinishing() || isDestroyed()) return;
+                        Toast.makeText(MainActivity.this, "Lỗi kết nối máy chủ: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void openBookings() {
+        NavTransitions.switchTab(this, new Intent(this, BookingsActivity.class), false);
+    }
+
     private void openProfile() {
-        startActivity(new Intent(this, ProfileActivity.class));
-        NavTransitions.applyOpen(this);
+        NavTransitions.switchTab(this, new Intent(this, ProfileActivity.class), false);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.edu.unilend.dto.auth.AuthResponse;
 import vn.edu.unilend.dto.auth.LoginRequest;
 import vn.edu.unilend.dto.auth.RegisterRequest;
+import vn.edu.unilend.dto.auth.UpdateProfileRequest;
 import vn.edu.unilend.dto.auth.UserProfileDto;
 import vn.edu.unilend.entity.Faculty;
 import vn.edu.unilend.entity.User;
@@ -90,6 +91,26 @@ public class AuthService {
         User user = userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin người dùng"));
         return toUserProfileDto(user);
+    }
+
+    @Transactional
+    public UserProfileDto updateProfile(String userCode, UpdateProfileRequest request) {
+        User user = userRepository.findByUserCode(userCode)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin người dùng"));
+
+        user.setFullName(request.getFullName().trim());
+        user.setPhone(request.getPhone());
+        user.setClassName(request.getClassName());
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl());
+        }
+        if (request.getFacultyId() != null) {
+            Faculty faculty = facultyRepository.findById(request.getFacultyId())
+                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy khoa ID: " + request.getFacultyId()));
+            user.setFaculty(faculty);
+        }
+
+        return toUserProfileDto(userRepository.save(user));
     }
 
     public UserProfileDto toUserProfileDto(User user) {

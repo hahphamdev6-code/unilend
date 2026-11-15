@@ -22,7 +22,7 @@ final class UniversityAdapter extends ArrayAdapter<String> {
     private final List<String> normalized;
 
     UniversityAdapter(@NonNull Context context, @NonNull String[] universities) {
-        super(context, android.R.layout.simple_dropdown_item_1line, new ArrayList<>(Arrays.asList(universities)));
+        super(context, R.layout.item_dropdown_option, R.id.tvDropdownText, new ArrayList<>(Arrays.asList(universities)));
         all = Arrays.asList(universities);
         normalized = new ArrayList<>(all.size());
         for (String u : all) normalized.add(normalize(u));

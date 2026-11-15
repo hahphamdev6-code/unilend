@@ -25,14 +25,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Elena Profile Picture -->
+        <!-- User Profile Avatar -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgProfileAvatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:contentDescription="Elena profile picture"
+            android:contentDescription="Ảnh đại diện"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_elena_avatar"
+            android:src="@drawable/ic_default_avatar"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
             app:strokeColor="@color/surface_container_lowest"
             app:strokeWidth="2dp" />
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/plus_jakarta_sans_medium"
-                android:text="UniLend • Tech Commons"
+                android:text="UniLend"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="11sp" />
 
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:fontFamily="@font/plus_jakarta_sans_bold"
-                android:text="Good morning, Elena 👋"
+                android:text="Xin chào, Elena 👋"
                 android:textColor="@color/on_surface"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -71,7 +71,7 @@
             android:layout_height="40dp"
             android:background="@drawable/bg_welcome_pill"
             android:clickable="true"
-            android:contentDescription="Notifications"
+            android:contentDescription="Thông báo"
             android:focusable="true">
 
             <ImageView
@@ -136,7 +136,7 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:contentDescription="Search"
+                        android:contentDescription="Tìm kiếm"
                         android:src="@drawable/ic_search"
                         app:tint="@color/outline" />
 
@@ -149,7 +149,7 @@
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:hint="Search equipment, model, or asset code..."
+                        android:hint="Tìm thiết bị, mã tài sản..."
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:singleLine="true"
@@ -164,7 +164,7 @@
                         android:layout_height="28dp"
                         android:layout_marginEnd="6dp"
                         android:background="@android:color/transparent"
-                        android:contentDescription="Clear search"
+                        android:contentDescription="Xóa tìm kiếm"
                         android:src="@drawable/ic_close"
                         android:visibility="gone"
                         app:tint="@color/outline" />
@@ -172,10 +172,9 @@
                     <!-- Filter Button with active indicator -->
                     <FrameLayout
                         android:id="@+id/btnFilter"
-                        android:layout_width="34dp"
-                        android:layout_height="34dp"
-                        android:background="@drawable/bg_pill"
-                        android:backgroundTint="@color/surface_container_low"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_select_box"
                         android:clickable="true"
                         android:focusable="true">
 
@@ -184,7 +183,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:layout_gravity="center"
-                            android:contentDescription="Filter"
+                            android:contentDescription="Bộ lọc"
                             android:src="@drawable/ic_tune"
                             app:tint="@color/on_surface" />
 
@@ -193,8 +192,8 @@
                             android:layout_width="8dp"
                             android:layout_height="8dp"
                             android:layout_gravity="top|end"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginEnd="3dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="4dp"
                             android:background="@drawable/bg_dot"
                             android:backgroundTint="@color/secondary"
                             android:visibility="gone" />
@@ -223,77 +222,43 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipAll"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.UniLend.Chip.Filter"
                         android:layout_width="wrap_content"
-                        android:layout_height="34dp"
+                        android:layout_height="wrap_content"
                         android:checked="true"
-                        android:fontFamily="@font/plus_jakarta_sans_semibold"
-                        android:text="All"
-                        android:textColor="@color/on_primary"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/primary"
-                        app:chipCornerRadius="17dp"
-                        app:chipStrokeWidth="0dp" />
+                        android:text="Tất cả" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipProjectors"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.UniLend.Chip.Filter"
                         android:layout_width="wrap_content"
-                        android:layout_height="34dp"
+                        android:layout_height="wrap_content"
                         android:checkable="true"
-                        android:fontFamily="@font/plus_jakarta_sans_semibold"
-                        android:text="Projectors"
-                        android:textColor="@color/on_surface"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/surface_container_lowest"
-                        app:chipCornerRadius="17dp"
-                        app:chipStrokeColor="@color/border_subtle"
-                        app:chipStrokeWidth="1dp" />
+                        android:text="Máy chiếu" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipAudio"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.UniLend.Chip.Filter"
                         android:layout_width="wrap_content"
-                        android:layout_height="34dp"
+                        android:layout_height="wrap_content"
                         android:checkable="true"
-                        android:fontFamily="@font/plus_jakarta_sans_semibold"
-                        android:text="Audio"
-                        android:textColor="@color/on_surface"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/surface_container_lowest"
-                        app:chipCornerRadius="17dp"
-                        app:chipStrokeColor="@color/border_subtle"
-                        app:chipStrokeWidth="1dp" />
+                        android:text="Âm thanh" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipCameras"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.UniLend.Chip.Filter"
                         android:layout_width="wrap_content"
-                        android:layout_height="34dp"
+                        android:layout_height="wrap_content"
                         android:checkable="true"
-                        android:fontFamily="@font/plus_jakarta_sans_semibold"
-                        android:text="Cameras"
-                        android:textColor="@color/on_surface"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/surface_container_lowest"
-                        app:chipCornerRadius="17dp"
-                        app:chipStrokeColor="@color/border_subtle"
-                        app:chipStrokeWidth="1dp" />
+                        android:text="Máy ảnh" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipKits"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.UniLend.Chip.Filter"
                         android:layout_width="wrap_content"
-                        android:layout_height="34dp"
+                        android:layout_height="wrap_content"
                         android:checkable="true"
-                        android:fontFamily="@font/plus_jakarta_sans_semibold"
-                        android:text="IoT"
-                        android:textColor="@color/on_surface"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/surface_container_lowest"
-                        app:chipCornerRadius="17dp"
-                        app:chipStrokeColor="@color/border_subtle"
-                        app:chipStrokeWidth="1dp" />
+                        android:text="IoT" />
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
@@ -335,7 +300,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/plus_jakarta_sans_bold"
-                            android:text="My borrowing"
+                            android:text="Đang mượn"
                             android:textColor="@color/on_surface"
                             android:textSize="16sp" />
 
@@ -348,7 +313,7 @@
                             android:paddingTop="3dp"
                             android:paddingEnd="10dp"
                             android:paddingBottom="3dp"
-                            android:text="Enrolled Student"
+                            android:text="Sinh viên"
                             android:textColor="@color/student_pill_text"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -389,7 +354,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/plus_jakarta_sans_bold"
-                                    android:text="1 Active"
+                                    android:text="1 Đang mượn"
                                     android:textColor="@color/on_surface"
                                     android:textSize="14sp" />
 
@@ -436,7 +401,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/plus_jakarta_sans_bold"
-                                    android:text="1 Pending"
+                                    android:text="1 Chờ duyệt"
                                     android:textColor="@color/on_surface"
                                     android:textSize="14sp" />
 
@@ -498,7 +463,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
                                     android:fontFamily="@font/plus_jakarta_sans_bold"
-                                    android:text="Return: Tomorrow, 5:00 PM"
+                                    android:text="Hạn trả: Ngày mai, 17:00"
                                     android:textColor="@color/on_surface"
                                     android:textSize="12sp" />
                             </LinearLayout>
@@ -508,7 +473,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Sony Alpha a7 IV (#CAM-204) • Media Tech Center"
+                                android:text="Sony Alpha a7 IV (#CAM-204) • Phòng Media Tech"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="11sp" />
                         </LinearLayout>
@@ -541,7 +506,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:fontFamily="@font/plus_jakarta_sans_regular"
-                            android:text="Staff review required for new requests • Zero student fees"
+                            android:text="Miễn phí cho sinh viên • Duyệt nhanh"
                             android:textColor="@color/on_surface_variant"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -568,7 +533,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/plus_jakarta_sans_bold"
-                        android:text="Available equipment"
+                        android:text="Thiết bị sẵn có"
                         android:textColor="@color/on_surface"
                         android:textSize="18sp" />
 
@@ -578,7 +543,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
                         android:fontFamily="@font/plus_jakarta_sans_regular"
-                        android:text="Reserve university inventory for lab &amp; course projects"
+                        android:text="Chọn thiết bị để đăng ký mượn"
                         android:textColor="@color/on_surface_variant"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -590,7 +555,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:fontFamily="@font/plus_jakarta_sans_bold"
-                    android:text="See all ›"
+                    android:text="Xem tất cả ›"
                     android:textColor="@color/secondary"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -728,7 +693,7 @@
                                 android:paddingTop="4dp"
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="4dp"
-                                android:text="Visual Tech"
+                                android:text="Trình chiếu"
                                 android:textColor="@color/on_surface"
                                 android:textSize="10sp" />
 
@@ -755,7 +720,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:fontFamily="@font/plus_jakarta_sans_semibold"
-                                    android:text="In Stock (3)"
+                                    android:text="Còn sẵn (3)"
                                     android:textColor="@color/emerald_text"
                                     android:textSize="10sp" />
                             </LinearLayout>
@@ -810,7 +775,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Tech Hub • Room B-12"
+                                android:text="Phòng B-12 · Tech Hub"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -836,7 +801,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Staff approval required • Max 3-day loan"
+                                android:text="Tối đa 3 ngày"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="10sp" />
                         </LinearLayout>
@@ -847,7 +812,7 @@
                             android:layout_height="46dp"
                             android:layout_marginTop="12dp"
                             android:fontFamily="@font/plus_jakarta_sans_medium"
-                            android:text="Request to borrow"
+                            android:text="Đăng ký mượn"
                             android:textAllCaps="false"
                             android:textColor="@color/on_primary"
                             android:textSize="14sp"
@@ -912,7 +877,7 @@
                                 android:paddingTop="4dp"
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="4dp"
-                                android:text="Audio Gear"
+                                android:text="Âm thanh"
                                 android:textColor="@color/on_surface"
                                 android:textSize="10sp" />
 
@@ -939,7 +904,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:fontFamily="@font/plus_jakarta_sans_semibold"
-                                    android:text="In Stock (2)"
+                                    android:text="Còn sẵn (2)"
                                     android:textColor="@color/emerald_text"
                                     android:textSize="10sp" />
                             </LinearLayout>
@@ -994,7 +959,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Media Commons • Room 302"
+                                android:text="Phòng 302 · Media Commons"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -1020,7 +985,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Staff approval required • Max 48-hr loan"
+                                android:text="Tối đa 48 giờ"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="10sp" />
                         </LinearLayout>
@@ -1031,7 +996,7 @@
                             android:layout_height="46dp"
                             android:layout_marginTop="12dp"
                             android:fontFamily="@font/plus_jakarta_sans_medium"
-                            android:text="Request to borrow"
+                            android:text="Đăng ký mượn"
                             android:textAllCaps="false"
                             android:textColor="@color/on_primary"
                             android:textSize="14sp"
@@ -1096,7 +1061,7 @@
                                 android:paddingTop="4dp"
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="4dp"
-                                android:text="IoT &amp; Robotics"
+                                android:text="IoT &amp; Robot"
                                 android:textColor="@color/on_surface"
                                 android:textSize="10sp" />
 
@@ -1123,7 +1088,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:fontFamily="@font/plus_jakarta_sans_semibold"
-                                    android:text="In Stock (5)"
+                                    android:text="Còn sẵn (5)"
                                     android:textColor="@color/emerald_text"
                                     android:textSize="10sp" />
                             </LinearLayout>
@@ -1178,7 +1143,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Makerspace • Lab 108"
+                                android:text="Lab 108 · Makerspace"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -1204,7 +1169,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Staff approval required • Max 7-day loan"
+                                android:text="Tối đa 7 ngày"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="10sp" />
                         </LinearLayout>
@@ -1215,7 +1180,7 @@
                             android:layout_height="46dp"
                             android:layout_marginTop="12dp"
                             android:fontFamily="@font/plus_jakarta_sans_medium"
-                            android:text="Request to borrow"
+                            android:text="Đăng ký mượn"
                             android:textAllCaps="false"
                             android:textColor="@color/on_primary"
                             android:textSize="14sp"
@@ -1280,7 +1245,7 @@
                                 android:paddingTop="4dp"
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="4dp"
-                                android:text="Photo &amp; Video"
+                                android:text="Máy ảnh &amp; Video"
                                 android:textColor="@color/on_surface"
                                 android:textSize="10sp" />
 
@@ -1307,7 +1272,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:fontFamily="@font/plus_jakarta_sans_semibold"
-                                    android:text="In Stock (2)"
+                                    android:text="Còn sẵn (2)"
                                     android:textColor="@color/emerald_text"
                                     android:textSize="10sp" />
                             </LinearLayout>
@@ -1362,7 +1327,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Media Tech Center • Room 204"
+                                android:text="Phòng 204 · Media Tech"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -1388,7 +1353,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Staff approval required • Max 3-day loan"
+                                android:text="Tối đa 3 ngày"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="10sp" />
                         </LinearLayout>
@@ -1399,7 +1364,7 @@
                             android:layout_height="46dp"
                             android:layout_marginTop="12dp"
                             android:fontFamily="@font/plus_jakarta_sans_medium"
-                            android:text="Request to borrow"
+                            android:text="Đăng ký mượn"
                             android:textAllCaps="false"
                             android:textColor="@color/on_primary"
                             android:textSize="14sp"
@@ -1464,7 +1429,7 @@
                                 android:paddingTop="4dp"
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="4dp"
-                                android:text="Drone &amp; Aerial"
+                                android:text="Drone"
                                 android:textColor="@color/on_surface"
                                 android:textSize="10sp" />
 
@@ -1491,7 +1456,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:fontFamily="@font/plus_jakarta_sans_semibold"
-                                    android:text="In Stock (2)"
+                                    android:text="Còn sẵn (2)"
                                     android:textColor="@color/emerald_text"
                                     android:textSize="10sp" />
                             </LinearLayout>
@@ -1546,7 +1511,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Media Tech Center • Drone Hub"
+                                android:text="Khu Drone · Media Tech"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -1572,7 +1537,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Pilot endorsement required • Max 3-day loan"
+                                android:text="Tối đa 3 ngày"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="10sp" />
                         </LinearLayout>
@@ -1583,7 +1548,7 @@
                             android:layout_height="46dp"
                             android:layout_marginTop="12dp"
                             android:fontFamily="@font/plus_jakarta_sans_medium"
-                            android:text="Request to borrow"
+                            android:text="Đăng ký mượn"
                             android:textAllCaps="false"
                             android:textColor="@color/on_primary"
                             android:textSize="14sp"
@@ -1648,7 +1613,7 @@
                                 android:paddingTop="4dp"
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="4dp"
-                                android:text="Computing Labs"
+                                android:text="Máy tính"
                                 android:textColor="@color/on_surface"
                                 android:textSize="10sp" />
 
@@ -1675,7 +1640,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:fontFamily="@font/plus_jakarta_sans_semibold"
-                                    android:text="In Stock (4)"
+                                    android:text="Còn sẵn (4)"
                                     android:textColor="@color/emerald_text"
                                     android:textSize="10sp" />
                             </LinearLayout>
@@ -1730,7 +1695,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Software Innovation Lab • B-04"
+                                android:text="Phòng B-04 · Lab Phần mềm"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -1756,7 +1721,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Staff approval required • Max 5-day loan"
+                                android:text="Tối đa 5 ngày"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="10sp" />
                         </LinearLayout>
@@ -1767,7 +1732,7 @@
                             android:layout_height="46dp"
                             android:layout_marginTop="12dp"
                             android:fontFamily="@font/plus_jakarta_sans_medium"
-                            android:text="Request to borrow"
+                            android:text="Đăng ký mượn"
                             android:textAllCaps="false"
                             android:textColor="@color/on_primary"
                             android:textSize="14sp"
@@ -1832,7 +1797,7 @@
                                 android:paddingTop="4dp"
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="4dp"
-                                android:text="Audio Gear"
+                                android:text="Âm thanh"
                                 android:textColor="@color/on_surface"
                                 android:textSize="10sp" />
 
@@ -1859,7 +1824,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:fontFamily="@font/plus_jakarta_sans_semibold"
-                                    android:text="In Stock (3)"
+                                    android:text="Còn sẵn (3)"
                                     android:textColor="@color/emerald_text"
                                     android:textSize="10sp" />
                             </LinearLayout>
@@ -1914,7 +1879,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Auditorium Sound Booth • Floor 1"
+                                android:text="Tầng 1 · Hội trường"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -1940,7 +1905,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:fontFamily="@font/plus_jakarta_sans_regular"
-                                android:text="Event registration required • Max 48-hr loan"
+                                android:text="Tối đa 48 giờ"
                                 android:textColor="@color/on_surface_variant"
                                 android:textSize="10sp" />
                         </LinearLayout>
@@ -1951,7 +1916,7 @@
                             android:layout_height="46dp"
                             android:layout_marginTop="12dp"
                             android:fontFamily="@font/plus_jakarta_sans_medium"
-                            android:text="Request to borrow"
+                            android:text="Đăng ký mượn"
                             android:textAllCaps="false"
                             android:textColor="@color/on_primary"
                             android:textSize="14sp"
@@ -1970,63 +1935,5 @@
     </ScrollView>
 
     <!-- 10. Floating Bottom Navigation Island -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottomNavigation"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="12dp"
-        app:cardBackgroundColor="@color/surface_translucent"
-        app:cardCornerRadius="32dp"
-        app:cardElevation="8dp"
-        app:strokeColor="@color/border_subtle"
-        app:strokeWidth="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp">
-
-            <!-- Explore (Active) -->
-            <TextView
-                android:id="@+id/navExplore"
-                style="@style/Widget.UniLend.HomeNavItem"
-                android:background="@drawable/bg_nav_active"
-                android:drawableTop="@drawable/ic_explore"
-                android:drawableTint="@color/on_primary"
-                android:text="Explore"
-                android:textColor="@color/on_primary" />
-
-            <!-- Saved -->
-            <TextView
-                android:id="@+id/navSaved"
-                style="@style/Widget.UniLend.HomeNavItem"
-                android:drawableTop="@drawable/ic_bookmark"
-                android:drawableTint="@color/outline"
-                android:text="Saved" />
-
-            <!-- Bookings -->
-            <TextView
-                android:id="@+id/navBookings"
-                style="@style/Widget.UniLend.HomeNavItem"
-                android:drawableTop="@drawable/ic_calendar"
-                android:drawableTint="@color/outline"
-                android:text="Bookings" />
-
-            <!-- Profile -->
-            <TextView
-                android:id="@+id/navProfile"
-                style="@style/Widget.UniLend.HomeNavItem"
-                android:drawableTop="@drawable/ic_person"
-                android:drawableTint="@color/outline"
-                android:text="Profile" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    <include layout="@layout/layout_bottom_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>

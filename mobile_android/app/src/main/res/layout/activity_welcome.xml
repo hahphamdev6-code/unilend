@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:minWidth="0dp"
-            android:text="Help  ⓘ"
+            android:text="Trợ giúp  ⓘ"
             android:textColor="@color/on_surface_variant"
             android:textSize="12sp"
             android:insetBottom="0dp"
@@ -91,7 +91,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:contentDescription="Premium items shared by the UniLend community"
+                        android:contentDescription="Thiết bị chia sẻ trên UniLend"
                         android:scaleType="centerCrop"
                         android:src="@drawable/welcome_items" />
 
@@ -122,7 +122,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:text="4.9 Community"
+                            android:text="4.9 Cộng đồng"
                             android:textColor="@color/on_surface"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -150,7 +150,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:text="Insured &amp; Protected"
+                            android:text="Bảo vệ an toàn"
                             android:textColor="@color/on_surface"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -164,7 +164,7 @@
                 android:layout_marginTop="70dp"
                 android:fontFamily="@font/plus_jakarta_sans_bold"
                 android:letterSpacing="-0.02"
-                android:text="Good Things Are Better Shared."
+                android:text="Mượn thiết bị dễ dàng hơn."
                 android:textColor="@color/on_surface"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -173,7 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Discover what you need, rent with ease, and earn from the quality items you already own."
+                android:text="Tìm kiếm, đặt lịch và sử dụng thiết bị học tập nhanh chóng."
                 android:textColor="@color/on_surface_variant"
                 android:textSize="12sp" />
 
@@ -198,7 +198,7 @@
                         android:gravity="center"
                         android:paddingStart="9dp"
                         android:paddingEnd="9dp"
-                        android:text="Verified Neighbors"
+                        android:text="Thành viên xác thực"
                         android:textColor="@color/on_surface"
                         android:textSize="9sp" />
 
@@ -213,7 +213,7 @@
                         android:gravity="center"
                         android:paddingStart="9dp"
                         android:paddingEnd="9dp"
-                        android:text="Free $10,000 Protection"
+                        android:text="Miễn phí sinh viên"
                         android:textColor="@color/on_surface"
                         android:textSize="9sp" />
 
@@ -228,7 +228,7 @@
                         android:gravity="center"
                         android:paddingStart="9dp"
                         android:paddingEnd="9dp"
-                        android:text="24/7 Support"
+                        android:text="Hỗ trợ 24/7"
                         android:textColor="@color/on_surface"
                         android:textSize="9sp" />
                 </LinearLayout>
@@ -240,7 +240,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="100dp"
-                android:text="Get Started"
+                android:text="Bắt đầu"
                 app:cornerRadius="26dp"
                 app:icon="@drawable/ic_arrow_forward"
                 app:iconGravity="textEnd"
@@ -252,7 +252,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="10dp"
-                android:text="Sign In"
+                android:text="Đăng nhập"
                 android:textColor="@color/on_surface"
                 android:textSize="13sp"
                 app:cornerRadius="26dp"
@@ -268,7 +268,7 @@
                 android:gravity="center"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="By continuing, you agree to our Terms of Service and Privacy Policy."
+                android:text="Tiếp tục đồng nghĩa bạn đồng ý với Điều khoản &amp; Bảo mật."
                 android:textColor="@color/on_surface_variant"
                 android:textSize="9sp" />
         </LinearLayout>

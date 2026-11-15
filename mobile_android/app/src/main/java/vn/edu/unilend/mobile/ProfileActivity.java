@@ -4,10 +4,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,9 +17,11 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.SystemBarStyle;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -26,6 +30,20 @@ import androidx.core.widget.NestedScrollView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import vn.edu.unilend.mobile.data.local.SessionManager;
+import vn.edu.unilend.mobile.data.model.ApiResponse;
+import vn.edu.unilend.mobile.data.model.BorrowItemDto;
+import vn.edu.unilend.mobile.data.model.BorrowRequestDto;
+import vn.edu.unilend.mobile.data.model.CreateMaintenanceReportRequest;
+import vn.edu.unilend.mobile.data.model.MaintenanceLogDto;
+import vn.edu.unilend.mobile.data.model.UserProfile;
+import vn.edu.unilend.mobile.data.remote.ApiClient;
+import vn.edu.unilend.mobile.data.remote.ApiErrorParser;
 import vn.edu.unilend.mobile.ui.auth.LoginActivity;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -34,13 +52,16 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String KEY_SCHOOL = "school";
 
     private View topBar;
-    private View bottomBar;
+    private View bottomNavigation;
     private NestedScrollView profileScroll;
+    private SessionManager sessionManager;
+    private BorrowRequestDto activeBorrow;
+    private BorrowRequestDto pendingBorrow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NavTransitions.registerForTab(this);
+        NavTransitions.registerTabSwitch(this);
 
         // Edge to edge with transparent status and navigation bars
         EdgeToEdge.enable(
@@ -50,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
         );
 
         setContentView(R.layout.activity_profile);
+        sessionManager = new SessionManager(this);
 
         initViews();
         setupWindowInsets();
@@ -62,14 +84,20 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        loadRemoteProfileAndLoans();
+    }
+
+    @Override
     public void finish() {
         super.finish();
-        NavTransitions.applyClose(this);
+        NavTransitions.applyTabSwitch(this);
     }
 
     private void initViews() {
         topBar = findViewById(R.id.topBar);
-        bottomBar = findViewById(R.id.bottomBar);
+        bottomNavigation = findViewById(R.id.bottomNavigation);
         profileScroll = findViewById(R.id.profileScroll);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
@@ -87,24 +115,32 @@ public class ProfileActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(bottomBar, (v, windowInsets) -> {
+        int navBaseMargin = (int) (12 * getResources().getDisplayMetrics().density);
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNavigation, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
-            v.setPadding(v.getPaddingLeft(), (int) (8 * getResources().getDisplayMetrics().density),
-                    v.getPaddingRight(), insets.bottom + (int) (8 * getResources().getDisplayMetrics().density));
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            if (lp != null) {
+                lp.bottomMargin = insets.bottom + navBaseMargin;
+                v.setLayoutParams(lp);
+            }
             return windowInsets;
         });
     }
 
     private void setupStudentIdCard() {
-        // Copy MSSV to clipboard
+        renderUserProfile();
+
+        // Copy MSSV / Mã NV to clipboard
         View btnCopy = findViewById(R.id.btnCopyMssv);
         if (btnCopy != null) {
             btnCopy.setOnClickListener(v -> {
+                String code = sessionManager.getUserCode();
+                if (code.isEmpty()) code = "SV2026001";
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("MSSV", "2021604892");
+                ClipData clip = ClipData.newPlainText("MSSV", code);
                 if (clipboard != null) {
                     clipboard.setPrimaryClip(clip);
-                    Toast.makeText(this, "Đã sao chép MSSV: 2021604892", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Đã sao chép mã: " + code, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -141,6 +177,7 @@ public class ProfileActivity extends AppCompatActivity {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.layout_school_dialog, null, false);
         MaterialAutoCompleteTextView input = dialogView.findViewById(R.id.etSchool);
         input.setAdapter(new UniversityAdapter(this, getResources().getStringArray(R.array.vn_universities)));
+        input.setDropDownBackgroundResource(R.drawable.bg_dropdown_popup);
         input.setText(getSchool(), false);
         input.setSelection(input.length());
 
@@ -188,12 +225,14 @@ public class ProfileActivity extends AppCompatActivity {
         View btnExtend = findViewById(R.id.btnExtend24h);
         if (btnExtend != null) {
             btnExtend.setOnClickListener(v -> {
+                String itemTitle = activeBorrow != null && activeBorrow.getItems() != null && !activeBorrow.getItems().isEmpty()
+                        ? activeBorrow.getItems().get(0).getEquipmentName()
+                        : "Sony Alpha a7 IV (#CAM-204)";
+                String reqCode = activeBorrow != null ? activeBorrow.getRequestCode() : "Đang mượn";
                 new MaterialAlertDialogBuilder(this)
                         .setTitle("Yêu cầu gia hạn thêm 24h")
-                        .setMessage("Thiết bị: Sony Alpha a7 IV (#CAM-204)\n\nHạn trả hiện tại: Ngày mai 17:00 (09/11/2026)\nHạn trả đề xuất mới: 17:00 ngày 10/11/2026\n\nBạn có muốn gửi yêu cầu gia hạn đến Quản lý Lab Media không?")
-                        .setPositiveButton("Gửi yêu cầu", (dialog, which) ->
-                                Toast.makeText(this, "Đã gửi yêu cầu gia hạn thêm 24h thành công!", Toast.LENGTH_LONG).show()
-                        )
+                        .setMessage("Phiếu mượn: " + reqCode + "\nThiết bị: " + itemTitle + "\n\nBạn có muốn gia hạn thêm 24 giờ không?")
+                        .setPositiveButton("Gửi yêu cầu", (dialog, which) -> extendActiveLoan())
                         .setNegativeButton("Hủy", null)
                         .show();
             });
@@ -270,9 +309,7 @@ public class ProfileActivity extends AppCompatActivity {
                 };
                 new MaterialAlertDialogBuilder(this)
                         .setTitle("Báo cáo sự cố thiết bị")
-                        .setItems(issues, (dialog, which) -> {
-                            Toast.makeText(this, "Đã tiếp nhận báo cáo: " + issues[which] + ". Kỹ thuật viên Lab sẽ liên hệ hỗ trợ bạn.", Toast.LENGTH_LONG).show();
-                        })
+                        .setItems(issues, (dialog, which) -> submitMaintenanceReport(issues[which]))
                         .setNegativeButton("Đóng", null)
                         .show();
             });
@@ -297,6 +334,16 @@ public class ProfileActivity extends AppCompatActivity {
             });
         }
 
+        // Staff Dashboard (Admin / Technician)
+        View btnStaffDashboard = findViewById(R.id.btnStaffDashboard);
+        if (btnStaffDashboard != null) {
+            btnStaffDashboard.setVisibility(sessionManager.isStaff() ? View.VISIBLE : View.GONE);
+            btnStaffDashboard.setOnClickListener(v -> {
+                startActivity(new Intent(this, StaffDashboardActivity.class));
+                NavTransitions.applyOpen(this);
+            });
+        }
+
         // Update optional school
         View btnSwitch = findViewById(R.id.btnSwitchFaculty);
         if (btnSwitch != null) {
@@ -311,6 +358,7 @@ public class ProfileActivity extends AppCompatActivity {
                         .setTitle("Đăng xuất tài khoản")
                         .setMessage("Bạn có chắc chắn muốn đăng xuất khỏi UniLend không?")
                         .setPositiveButton("Đăng xuất", (dialog, which) -> {
+                            sessionManager.clearSession();
                             Intent intent = new Intent(this, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -323,33 +371,219 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void renderUserProfile() {
+        String fullName = sessionManager.getFullName();
+        String email = sessionManager.getEmail();
+        String userCode = sessionManager.getUserCode();
+        String role = sessionManager.getRole();
+        String faculty = sessionManager.getFacultyName();
+
+        TextView tvProfileName = findViewById(R.id.tvProfileName);
+        TextView tvProfileFullName = findViewById(R.id.tvProfileFullName);
+        TextView tvProfileMssv = findViewById(R.id.tvProfileMssv);
+        TextView tvTopSubtitle = findViewById(R.id.tvTopSubtitle);
+
+        if (tvProfileName != null && !fullName.isEmpty()) {
+            tvProfileName.setText(fullName);
+        }
+        if (tvProfileFullName != null && !email.isEmpty()) {
+            String sub = !faculty.isEmpty() ? email + " · " + faculty : email;
+            tvProfileFullName.setText(sub);
+        }
+        if (tvProfileMssv != null && !userCode.isEmpty()) {
+            tvProfileMssv.setText("Mã: " + userCode + " (" + role + ")");
+        }
+        if (tvTopSubtitle != null && !role.isEmpty()) {
+            tvTopSubtitle.setText("Tài khoản " + role);
+        }
+    }
+
+    private void loadRemoteProfileAndLoans() {
+        if (!sessionManager.isLoggedIn()) return;
+
+        ApiClient.auth(this).getMyProfile().enqueue(new Callback<ApiResponse<UserProfile>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<UserProfile>> call,
+                                   @NonNull Response<ApiResponse<UserProfile>> response) {
+                if (isFinishing() || isDestroyed()) return;
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    sessionManager.updateUserProfile(response.body().getData());
+                    renderUserProfile();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<UserProfile>> call, @NonNull Throwable t) { }
+        });
+
+        ApiClient.borrow(this).getMyBorrowRequests(null).enqueue(new Callback<ApiResponse<List<BorrowRequestDto>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<BorrowRequestDto>>> call,
+                                   @NonNull Response<ApiResponse<List<BorrowRequestDto>>> response) {
+                if (isFinishing() || isDestroyed()) return;
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    bindRemoteLoans(response.body().getData());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<BorrowRequestDto>>> call, @NonNull Throwable t) { }
+        });
+    }
+
+    private void bindRemoteLoans(List<BorrowRequestDto> loans) {
+        activeBorrow = null;
+        pendingBorrow = null;
+        for (BorrowRequestDto br : loans) {
+            String st = br.getStatus();
+            if (activeBorrow == null && ("BORROWING".equalsIgnoreCase(st) || "OVERDUE".equalsIgnoreCase(st) || "APPROVED".equalsIgnoreCase(st))) {
+                activeBorrow = br;
+            } else if (pendingBorrow == null && "PENDING".equalsIgnoreCase(st)) {
+                pendingBorrow = br;
+            }
+        }
+
+        TextView tvActiveCat = findViewById(R.id.tvActiveLoanCategory);
+        TextView tvActiveTitle = findViewById(R.id.tvActiveLoanTitle);
+        TextView tvActiveLoc = findViewById(R.id.tvActiveLoanLocation);
+        TextView tvActiveDeadline = findViewById(R.id.tvActiveLoanDeadline);
+        View btnExtend = findViewById(R.id.btnExtend24h);
+
+        if (activeBorrow != null) {
+            BorrowItemDto first = (activeBorrow.getItems() != null && !activeBorrow.getItems().isEmpty())
+                    ? activeBorrow.getItems().get(0) : null;
+            if (tvActiveCat != null) tvActiveCat.setText(activeBorrow.getRequestCode() + " · " + activeBorrow.getStatus());
+            if (tvActiveTitle != null && first != null) tvActiveTitle.setText(first.getEquipmentName());
+            if (tvActiveLoc != null) tvActiveLoc.setText(activeBorrow.getPurpose());
+            if (tvActiveDeadline != null) tvActiveDeadline.setText("Hạn trả: " + formatApiDate(activeBorrow.getExpectedReturnTime()));
+            if (btnExtend != null) btnExtend.setVisibility(View.VISIBLE);
+        } else {
+            if (tvActiveCat != null) tvActiveCat.setText("KHÔNG CÓ PHIẾU ĐANG MƯỢN");
+            if (tvActiveTitle != null) tvActiveTitle.setText("Chưa có thiết bị đang mượn");
+            if (tvActiveLoc != null) tvActiveLoc.setText("Hãy khám phá và tạo phiếu mượn mới");
+            if (tvActiveDeadline != null) tvActiveDeadline.setText("—");
+            if (btnExtend != null) btnExtend.setVisibility(View.GONE);
+        }
+
+        TextView tvPendingCat = findViewById(R.id.tvPendingLoanCategory);
+        TextView tvPendingTitle = findViewById(R.id.tvPendingLoanTitle);
+        TextView tvPendingCode = findViewById(R.id.tvPendingLoanCode);
+        TextView tvPendingSchedule = findViewById(R.id.tvPendingLoanSchedule);
+
+        if (pendingBorrow != null) {
+            BorrowItemDto first = (pendingBorrow.getItems() != null && !pendingBorrow.getItems().isEmpty())
+                    ? pendingBorrow.getItems().get(0) : null;
+            if (tvPendingCat != null) tvPendingCat.setText("CHỜ DUYỆT · " + pendingBorrow.getRequestCode());
+            if (tvPendingTitle != null && first != null) tvPendingTitle.setText(first.getEquipmentName());
+            if (tvPendingCode != null && first != null) tvPendingCode.setText(first.getEquipmentCode() + " · " + pendingBorrow.getPurpose());
+            if (tvPendingSchedule != null) {
+                tvPendingSchedule.setText("Lịch: " + formatApiDate(pendingBorrow.getBorrowTime())
+                        + " – " + formatApiDate(pendingBorrow.getExpectedReturnTime()));
+            }
+        } else {
+            if (tvPendingCat != null) tvPendingCat.setText("KHÔNG CÓ PHIẾU CHỜ DUYỆT");
+            if (tvPendingTitle != null) tvPendingTitle.setText("Chưa có yêu cầu chờ duyệt");
+            if (tvPendingCode != null) tvPendingCode.setText("—");
+            if (tvPendingSchedule != null) tvPendingSchedule.setText("—");
+        }
+    }
+
+    private String formatApiDate(String iso) {
+        if (iso == null) return "";
+        return iso.replace("T", " ").substring(0, Math.min(16, iso.length()));
+    }
+
+    private void extendActiveLoan() {
+        if (activeBorrow == null) {
+            Toast.makeText(this, "Không có phiếu đang mượn trên hệ thống để gia hạn", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ApiClient.borrow(this).extendBorrowRequest(activeBorrow.getId(), 24)
+                .enqueue(new Callback<ApiResponse<BorrowRequestDto>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<BorrowRequestDto>> call,
+                                           @NonNull Response<ApiResponse<BorrowRequestDto>> response) {
+                        if (isFinishing() || isDestroyed()) return;
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            Toast.makeText(ProfileActivity.this, "Đã gia hạn thêm 24h thành công!", Toast.LENGTH_LONG).show();
+                            loadRemoteProfileAndLoans();
+                        } else {
+                            Toast.makeText(ProfileActivity.this,
+                                    ApiErrorParser.parseMessage(response, "Không thể gia hạn"),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<BorrowRequestDto>> call, @NonNull Throwable t) {
+                        Toast.makeText(ProfileActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void submitMaintenanceReport(String issueDescription) {
+        long targetEquipmentId = 1L;
+        if (activeBorrow != null && activeBorrow.getItems() != null && !activeBorrow.getItems().isEmpty()) {
+            targetEquipmentId = activeBorrow.getItems().get(0).getEquipmentId();
+        }
+        if (!sessionManager.isLoggedIn()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để gửi báo cáo", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ApiClient.maintenance(this)
+                .reportIssue(new CreateMaintenanceReportRequest(targetEquipmentId, issueDescription, "MEDIUM"))
+                .enqueue(new Callback<ApiResponse<MaintenanceLogDto>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<MaintenanceLogDto>> call,
+                                           @NonNull Response<ApiResponse<MaintenanceLogDto>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            Toast.makeText(ProfileActivity.this,
+                                    "Đã gửi báo cáo sự cố tới Kỹ thuật viên!",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(ProfileActivity.this,
+                                    ApiErrorParser.parseMessage(response, "Không thể gửi báo cáo"),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<MaintenanceLogDto>> call, @NonNull Throwable t) {
+                        Toast.makeText(ProfileActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void setupBottomNav() {
-        // Tab 1: Explore -> MainActivity is already underneath; just close this screen.
-        // (Re-launching it with CLEAR_TOP destroyed and rebuilt Explore, causing the stutter.)
+        int active = ContextCompat.getColor(this, R.color.on_primary);
+        int inactive = ContextCompat.getColor(this, R.color.on_surface_variant);
+        int[] ids = {R.id.navExplore, R.id.navSaved, R.id.navBookings, R.id.navProfile};
+
+        for (int id : ids) {
+            TextView item = findViewById(id);
+            if (item == null) continue;
+            boolean isSelected = (id == R.id.navProfile);
+            item.setBackgroundResource(isSelected ? R.drawable.bg_nav_active : android.R.color.transparent);
+            item.setTextColor(isSelected ? active : inactive);
+            item.setCompoundDrawableTintList(ColorStateList.valueOf(isSelected ? active : inactive));
+        }
+
         View navExplore = findViewById(R.id.navExplore);
         if (navExplore != null) {
-            navExplore.setOnClickListener(v -> finish());
+            navExplore.setOnClickListener(v -> navigateToMainTab("explore"));
         }
 
-        // Tab 2: Saved -> scroll to saved section
         View navSaved = findViewById(R.id.navSaved);
         if (navSaved != null) {
-            navSaved.setOnClickListener(v -> {
-                View target = findViewById(R.id.cardSavedMacbook);
-                if (target != null && profileScroll != null) {
-                    profileScroll.smoothScrollTo(0, target.getTop() - 200);
-                }
-                Toast.makeText(this, "Thiết bị đã quan tâm (4 mục có sẵn)", Toast.LENGTH_SHORT).show();
-            });
+            navSaved.setOnClickListener(v -> navigateToMainTab("saved"));
         }
 
-        // Tab 3: Bookings -> show active kiosk pass
         View navBookings = findViewById(R.id.navBookings);
         if (navBookings != null) {
-            navBookings.setOnClickListener(v -> showKioskPassDialog());
+            navBookings.setOnClickListener(v ->
+                    NavTransitions.switchTab(this, new Intent(this, BookingsActivity.class), true));
         }
 
-        // Tab 4: Profile -> scroll to top
         View navProfile = findViewById(R.id.navProfile);
         if (navProfile != null) {
             navProfile.setOnClickListener(v -> {
@@ -358,6 +592,13 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void navigateToMainTab(String tab) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(MainActivity.EXTRA_TAB, tab);
+        NavTransitions.switchTab(this, intent, true);
     }
 
     private void showKioskPassDialog() {

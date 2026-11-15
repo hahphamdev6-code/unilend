@@ -29,11 +29,13 @@ public class Equipment {
     @Column(nullable = false, length = 150)
     private String name;
 
-    @Column(name = "category_id", nullable = false)
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
-    @Column(name = "room_id")
-    private Long roomId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
 
     @Column(length = 100)
     private String brand;
@@ -65,4 +67,21 @@ public class Equipment {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (status == null) {
+            status = EquipmentStatus.AVAILABLE;
+        }
+        if (conditionNote == null || conditionNote.isBlank()) {
+            conditionNote = "Hoạt động tốt";
+        }
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

@@ -30,158 +30,11 @@
             android:paddingEnd="20dp"
             android:paddingBottom="32dp">
 
-            <!-- ===== Hero visual ===== -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/surface_container_lowest"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#99FFFFFF"
-                app:strokeWidth="1dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/imgHero"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:contentDescription="@null"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/img_register_hero"
-                        app:layout_constraintDimensionRatio="16:9"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:alpha="0.66"
-                        android:background="@drawable/bg_hero_scrim"
-                        app:layout_constraintBottom_toBottomOf="@id/imgHero"
-                        app:layout_constraintEnd_toEndOf="@id/imgHero"
-                        app:layout_constraintStart_toStartOf="@id/imgHero"
-                        app:layout_constraintTop_toTopOf="@id/imgHero" />
-
-                    <!-- Trust badge -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:background="@drawable/bg_pill"
-                        android:backgroundTint="@color/white_90"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="12dp"
-                        android:paddingBottom="4dp"
-                        app:layout_constraintBottom_toBottomOf="@id/imgHero"
-                        app:layout_constraintStart_toStartOf="parent">
-
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_verified_user_fill"
-                            app:tint="@color/ink" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:fontFamily="@font/plus_jakarta_sans_bold"
-                            android:text="@string/register_hero_insured"
-                            android:textAppearance="@style/TextAppearance.UniLend.LabelSm"
-                            android:textColor="@color/ink" />
-                    </LinearLayout>
-
-                    <!-- Rating pill -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:background="@drawable/bg_pill"
-                        android:backgroundTint="@color/ink_80"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="10dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="10dp"
-                        android:paddingBottom="4dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_star_fill"
-                            app:tint="@color/rating_star" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/register_hero_rating"
-                            android:textAppearance="@style/TextAppearance.UniLend.LabelSm"
-                            android:textColor="@color/white" />
-                    </LinearLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ===== Hero typography ===== -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_pill"
-                android:backgroundTint="@color/secondary_fixed_half"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="12dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="4dp">
-
-                <View
-                    android:id="@+id/chipDot"
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:background="@drawable/bg_dot"
-                    android:backgroundTint="@color/secondary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/register_hero_chip"
-                    android:textAppearance="@style/TextAppearance.UniLend.LabelSm"
-                    android:textColor="@color/secondary" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/register_hero_title"
-                android:textAppearance="@style/TextAppearance.UniLend.HeadlineMd" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/register_hero_subtitle"
-                android:textAppearance="@style/TextAppearance.UniLend.BodyMd" />
-
             <!-- ===== Registration form card ===== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/bg_form_card"
                 android:elevation="2dp"
                 android:orientation="vertical"
@@ -208,6 +61,33 @@
                         android:textAppearance="@style/TextAppearance.UniLend.LabelSm"
                         android:textColor="@color/on_surface_variant" />
                 </LinearLayout>
+
+                <!-- 0. Student / Staff Code -->
+                <TextView
+                    style="@style/Widget.UniLend.FieldLabel"
+                    android:labelFor="@id/etUserCode"
+                    android:text="Student / Staff ID" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilUserCode"
+                    style="@style/Widget.UniLend.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundColor="@color/surface_container_low"
+                    app:startIconDrawable="@drawable/ic_school"
+                    app:startIconTint="@color/on_surface_variant">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etUserCode"
+                        style="@style/Widget.UniLend.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="e.g. SV2026002 or GV002"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapCharacters"
+                        android:minHeight="48dp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- 1. Full name -->
                 <TextView

@@ -75,3 +75,18 @@ unilend/
 | `GET` | `/api/v1/admin/users` | `ROLE_ADMIN` | Danh sách toàn bộ người dùng |
 | `PATCH` | `/api/v1/admin/users/{id}/role` | `ROLE_ADMIN` | Thay đổi phân quyền (`STUDENT`, `LECTURER`, `TECHNICIAN`, `ADMIN`) |
 | `PATCH` | `/api/v1/admin/users/{id}/status` | `ROLE_ADMIN` | Khóa hoặc mở khóa tài khoản (`ACTIVE`, `LOCKED`) |
+| `PUT` | `/api/v1/auth/me` | Đã đăng nhập | Cập nhật thông tin cá nhân người dùng |
+| `GET` | `/api/v1/faculties` | Công khai | Danh sách khoa / đơn vị |
+| `GET` | `/api/v1/categories` | Đã đăng nhập | Danh sách danh mục thiết bị |
+| `GET` | `/api/v1/rooms` | Đã đăng nhập | Danh sách phòng học / kho thiết bị |
+| `GET` | `/api/v1/equipments` | Đã đăng nhập | Tìm kiếm & lọc danh sách thiết bị |
+| `GET` | `/api/v1/equipments/{id}` | Đã đăng nhập | Chi tiết thiết bị |
+| `GET` | `/api/v1/equipments/qr/{qrCode}` | Đã đăng nhập | Tra cứu thiết bị qua mã QR |
+| `POST` / `PUT` / `PATCH` | `/api/v1/equipments/**` | `ADMIN`, `TECHNICIAN` | Thêm, sửa, đổi trạng thái thiết bị |
+| `POST` | `/api/v1/borrows` | Đã đăng nhập | Tạo phiếu yêu cầu mượn thiết bị |
+| `GET` | `/api/v1/borrows/my` | Đã đăng nhập | Danh sách phiếu mượn của bản thân |
+| `POST` | `/api/v1/borrows/{id}/cancel` | Đã đăng nhập | Hủy phiếu mượn chờ duyệt |
+| `POST` | `/api/v1/borrows/{id}/extend` | Đã đăng nhập | Gia hạn thời gian trả thiết bị (+24h) |
+| `GET` / `PATCH` | `/api/v1/borrows/**` | `ADMIN`, `TECHNICIAN` | Duyệt, từ chối, bàn giao & nhận trả thiết bị |
+| `POST` | `/api/v1/maintenance/report` | Đã đăng nhập | Báo cáo sự cố / hư hỏng thiết bị |
+| `GET` / `PATCH` | `/api/v1/maintenance/**` | `ADMIN`, `TECHNICIAN` | Quản lý & xử lý bảo trì thiết bị |

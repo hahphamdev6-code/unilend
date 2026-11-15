@@ -9,11 +9,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.SystemBarStyle;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -27,10 +29,24 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import vn.edu.unilend.mobile.data.local.SessionManager;
+import vn.edu.unilend.mobile.data.model.ApiResponse;
+import vn.edu.unilend.mobile.data.model.BorrowRequestDto;
+import vn.edu.unilend.mobile.data.model.CreateBorrowRequest;
+import vn.edu.unilend.mobile.data.model.EquipmentDto;
+import vn.edu.unilend.mobile.data.remote.ApiClient;
+import vn.edu.unilend.mobile.data.remote.ApiErrorParser;
 
 public class EquipmentDetailActivity extends AppCompatActivity {
 
+    public static final String EXTRA_EQUIPMENT_ID = "extra_equipment_id";
     public static final String EXTRA_ITEM_TITLE = "extra_item_title";
     public static final String EXTRA_ASSET_CODE = "extra_asset_code";
     public static final String EXTRA_CATEGORY = "extra_category";
@@ -86,20 +102,25 @@ public class EquipmentDetailActivity extends AppCompatActivity {
     private CheckBox cbAgreeTerms;
     private MaterialButton btnSubmitRequest;
 
+    private SessionManager sessionManager;
+    private long equipmentId = -1L;
+    private String assetCode = "";
     private int currentMainImageRes = R.drawable.img_epson_projector;
     private boolean isBookmarked = false;
     private final Calendar startCalendar = Calendar.getInstance();
     private final Calendar endCalendar = Calendar.getInstance();
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    private final SimpleDateFormat apiDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NavTransitions.registerForTab(this);
+        NavTransitions.registerDetailSlide(this);
         EdgeToEdge.enable(this,
                 SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
                 SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT));
         setContentView(R.layout.activity_equipment_detail);
+        sessionManager = new SessionManager(this);
 
         initViews();
         setupWindowInsets();
@@ -195,8 +216,10 @@ public class EquipmentDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent == null) return;
 
+        equipmentId = intent.getLongExtra(EXTRA_EQUIPMENT_ID, -1L);
         String title = intent.getStringExtra(EXTRA_ITEM_TITLE);
-        String assetCode = intent.getStringExtra(EXTRA_ASSET_CODE);
+        String code = intent.getStringExtra(EXTRA_ASSET_CODE);
+        assetCode = code != null ? code : "";
         String category = intent.getStringExtra(EXTRA_CATEGORY);
         String location = intent.getStringExtra(EXTRA_LOCATION);
         String department = intent.getStringExtra(EXTRA_DEPARTMENT);
@@ -206,7 +229,10 @@ public class EquipmentDetailActivity extends AppCompatActivity {
         currentMainImageRes = imageRes;
 
         if (title != null) tvEquipmentTitle.setText(title);
-        if (assetCode != null) tvAssetCodeTop.setText(assetCode);
+        if (code != null) tvAssetCodeTop.setText(code);
+
+        isBookmarked = sessionManager.isBookmarked(assetCode);
+        renderBookmarkState();
         if (category != null) tvCategoryBadge.setText(category);
         if (location != null) tvLocation.setText(location);
         if (department != null) tvDepartment.setText(department);
@@ -263,52 +289,46 @@ public class EquipmentDetailActivity extends AppCompatActivity {
 
         btnBookmark.setOnClickListener(v -> {
             isBookmarked = !isBookmarked;
-            if (isBookmarked) {
-                btnBookmark.setImageResource(R.drawable.ic_bookmark);
-                btnBookmark.setColorFilter(getColor(R.color.secondary));
-                Toast.makeText(this, "Saved to your bookmarks", Toast.LENGTH_SHORT).show();
-            } else {
-                btnBookmark.setImageResource(R.drawable.ic_bookmark);
-                btnBookmark.setColorFilter(getColor(R.color.on_surface));
-                Toast.makeText(this, "Removed from bookmarks", Toast.LENGTH_SHORT).show();
-            }
+            sessionManager.setBookmarked(assetCode, isBookmarked);
+            renderBookmarkState();
+            Toast.makeText(this, isBookmarked ? "Đã lưu thiết bị" : "Đã bỏ lưu", Toast.LENGTH_SHORT).show();
         });
 
         btnShare.setOnClickListener(v -> {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT,
-                    "Check out " + tvEquipmentTitle.getText() + " (" + tvAssetCodeTop.getText() + ") available on UniLend Campus Lending.");
+                    "Xem thiết bị " + tvEquipmentTitle.getText() + " (" + tvAssetCodeTop.getText() + ") trên UniLend.");
             sendIntent.setType("text/plain");
-            startActivity(Intent.createChooser(sendIntent, "Share Equipment"));
+            startActivity(Intent.createChooser(sendIntent, "Chia sẻ thiết bị"));
         });
 
         // Date selection
         btnSelectStartDate.setOnClickListener(v -> showDatePicker(true));
         btnSelectEndDate.setOnClickListener(v -> showDatePicker(false));
 
-        // Purpose selection dialog
+        // Purpose selection bottom sheet
         final String[] purposes = {
-                "Graduation Capstone Project / Seminar",
-                "Course Assignment / Practical Lab",
-                "Campus Club Activity & Media Coverage",
-                "Faculty Supervised Research",
-                "Self-study & Innovation Challenge"
+                "Đồ án tốt nghiệp / Hội thảo",
+                "Bài tập lớn / Thực hành Lab",
+                "Hoạt động CLB & Truyền thông",
+                "Nghiên cứu khoa học",
+                "Tự học & Cuộc thi sáng tạo"
+        };
+        final String[] purposeSubtitles = {
+                "Bảo vệ đồ án, seminar khoa hoặc hội thảo chuyên đề",
+                "Môn học trên lớp, bài tập nhóm và thực hành phòng lab",
+                "Sự kiện sinh viên, quay dựng truyền thông CLB",
+                "Đề tài NCKH sinh viên hoặc thí nghiệm cùng giảng viên",
+                "Ôn luyện kỹ năng, hackathon và cuộc thi học thuật"
         };
 
-        btnSelectPurpose.setOnClickListener(v -> {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle("Select Purpose of Borrowing")
-                    .setItems(purposes, (dialog, which) -> {
-                        tvSelectedPurpose.setText(purposes[which]);
-                    })
-                    .show();
-        });
+        btnSelectPurpose.setOnClickListener(v -> showPurposeBottomSheet(purposes, purposeSubtitles));
 
         // Submit Request Button
         btnSubmitRequest.setOnClickListener(v -> {
             if (!cbAgreeTerms.isChecked()) {
-                Toast.makeText(this, "Please agree to the Campus Lending Regulations to proceed.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Vui lòng đồng ý với quy định mượn trả.", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -317,15 +337,180 @@ public class EquipmentDetailActivity extends AppCompatActivity {
             String duration = tvDurationPill.getText().toString();
 
             new MaterialAlertDialogBuilder(this)
-                    .setTitle("Confirm Borrow Request")
-                    .setMessage("Submit borrowing request for:\n\n• " + equipment + " (" + code + ")\n• Duration: " + duration + "\n• Fee: 0 VNĐ (University Grant)\n\nAdvisor approval request will be sent to Dr. Nguyen Van A.")
-                    .setPositiveButton("Confirm & Submit", (dialog, which) -> {
-                        Toast.makeText(this, "Request submitted successfully! Tracking ID #REQ-" + System.currentTimeMillis() % 10000, Toast.LENGTH_LONG).show();
-                        finish();
-                    })
-                    .setNegativeButton("Review", null)
+                    .setTitle("Xác nhận phiếu mượn")
+                    .setMessage("• " + equipment + " (" + code + ")\n• Thời hạn: " + duration + "\n• Phí: 0 VNĐ\n\nPhiếu mượn sẽ được gửi tới Kỹ thuật viên duyệt.")
+                    .setPositiveButton("Gửi yêu cầu", (dialog, which) -> submitBorrowRequest())
+                    .setNegativeButton("Xem lại", null)
                     .show();
         });
+    }
+
+    private void showPurposeBottomSheet(String[] purposes, String[] subtitles) {
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog =
+                new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        View sheet = getLayoutInflater().inflate(R.layout.layout_select_bottom_sheet, null);
+        dialog.setContentView(sheet);
+        dialog.setOnShowListener(d -> {
+            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                bottomSheet.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            }
+        });
+
+        TextView tvTitle = sheet.findViewById(R.id.tvSelectSheetTitle);
+        TextView tvSubtitle = sheet.findViewById(R.id.tvSelectSheetSubtitle);
+        LinearLayout container = sheet.findViewById(R.id.selectOptionsContainer);
+        tvTitle.setText("Chọn mục đích mượn");
+        tvSubtitle.setText("Giúp kỹ thuật viên ưu tiên duyệt phiếu phù hợp");
+        sheet.findViewById(R.id.btnCloseSelectSheet).setOnClickListener(v -> dialog.dismiss());
+
+        String currentPurpose = tvSelectedPurpose.getText() != null
+                ? tvSelectedPurpose.getText().toString().trim() : "";
+
+        for (int i = 0; i < purposes.length; i++) {
+            String option = purposes[i];
+            String sub = i < subtitles.length ? subtitles[i] : "";
+            boolean isSelected = option.equalsIgnoreCase(currentPurpose);
+
+            View itemView = getLayoutInflater().inflate(R.layout.item_select_option, container, false);
+            LinearLayout card = itemView.findViewById(R.id.selectOptionCard);
+            TextView tvOptTitle = itemView.findViewById(R.id.tvOptionTitle);
+            TextView tvOptSub = itemView.findViewById(R.id.tvOptionSubtitle);
+            View checkContainer = itemView.findViewById(R.id.optionCheckContainer);
+
+            tvOptTitle.setText(option);
+            if (!sub.isEmpty()) {
+                tvOptSub.setText(sub);
+                tvOptSub.setVisibility(View.VISIBLE);
+            }
+
+            if (isSelected) {
+                card.setBackgroundResource(R.drawable.bg_select_option_active);
+                tvOptTitle.setTextColor(getColor(R.color.on_secondary_container));
+                checkContainer.setVisibility(View.VISIBLE);
+            } else {
+                card.setBackgroundResource(R.drawable.bg_select_option_normal);
+                tvOptTitle.setTextColor(getColor(R.color.on_surface));
+                checkContainer.setVisibility(View.GONE);
+            }
+
+            itemView.setOnClickListener(v -> {
+                tvSelectedPurpose.setText(option);
+                dialog.dismiss();
+            });
+            container.addView(itemView);
+        }
+
+        dialog.show();
+    }
+
+    private void renderBookmarkState() {
+        btnBookmark.setImageResource(R.drawable.ic_bookmark);
+        btnBookmark.setColorFilter(getColor(isBookmarked ? R.color.secondary : R.color.on_surface));
+    }
+
+    private void submitBorrowRequest() {
+        if (!sessionManager.isLoggedIn()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để gửi phiếu mượn", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        btnSubmitRequest.setEnabled(false);
+        btnSubmitRequest.setText("Đang gửi yêu cầu...");
+
+        if (equipmentId > 0) {
+            sendBorrowApiCall(equipmentId);
+            return;
+        }
+
+        String titleQuery = tvEquipmentTitle.getText().toString().trim();
+        ApiClient.equipment(this).getEquipments(titleQuery, null, null, null)
+                .enqueue(new Callback<ApiResponse<List<EquipmentDto>>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<List<EquipmentDto>>> call,
+                                           @NonNull Response<ApiResponse<List<EquipmentDto>>> response) {
+                        if (isFinishing() || isDestroyed()) return;
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().getData() != null && !response.body().getData().isEmpty()) {
+                            equipmentId = response.body().getData().get(0).getId();
+                            sendBorrowApiCall(equipmentId);
+                        } else {
+                            restoreSubmitButton();
+                            Toast.makeText(EquipmentDetailActivity.this,
+                                    "Không tìm thấy thiết bị trên máy chủ. Hãy kiểm tra dữ liệu CSDL.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<List<EquipmentDto>>> call, @NonNull Throwable t) {
+                        if (isFinishing() || isDestroyed()) return;
+                        restoreSubmitButton();
+                        Toast.makeText(EquipmentDetailActivity.this,
+                                "Không thể kết nối máy chủ: " + t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void sendBorrowApiCall(long targetEquipmentId) {
+        Calendar borrowCal = (Calendar) startCalendar.clone();
+        borrowCal.set(Calendar.HOUR_OF_DAY, 8);
+        borrowCal.set(Calendar.MINUTE, 0);
+        borrowCal.set(Calendar.SECOND, 0);
+
+        Calendar returnCal = (Calendar) endCalendar.clone();
+        returnCal.set(Calendar.HOUR_OF_DAY, 17);
+        returnCal.set(Calendar.MINUTE, 0);
+        returnCal.set(Calendar.SECOND, 0);
+
+        String purpose = tvSelectedPurpose.getText() != null ? tvSelectedPurpose.getText().toString().trim() : "Phục vụ học tập";
+        String notes = edtNotes.getText() != null ? edtNotes.getText().toString().trim() : "";
+
+        CreateBorrowRequest request = new CreateBorrowRequest(
+                Collections.singletonList(targetEquipmentId),
+                null,
+                purpose,
+                apiDateFormat.format(borrowCal.getTime()),
+                apiDateFormat.format(returnCal.getTime()),
+                notes
+        );
+
+        ApiClient.borrow(this).createBorrowRequest(request)
+                .enqueue(new Callback<ApiResponse<BorrowRequestDto>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<BorrowRequestDto>> call,
+                                           @NonNull Response<ApiResponse<BorrowRequestDto>> response) {
+                        if (isFinishing() || isDestroyed()) return;
+                        restoreSubmitButton();
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            BorrowRequestDto created = response.body().getData();
+                            String code = created != null ? created.getRequestCode() : "PM-OK";
+                            Toast.makeText(EquipmentDetailActivity.this,
+                                    "Gửi phiếu mượn thành công! Mã phiếu: " + code,
+                                    Toast.LENGTH_LONG).show();
+                            finish();
+                            return;
+                        }
+                        Toast.makeText(EquipmentDetailActivity.this,
+                                ApiErrorParser.parseMessage(response, "Không thể tạo phiếu mượn"),
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<BorrowRequestDto>> call, @NonNull Throwable t) {
+                        if (isFinishing() || isDestroyed()) return;
+                        restoreSubmitButton();
+                        Toast.makeText(EquipmentDetailActivity.this,
+                                "Lỗi kết nối máy chủ: " + t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void restoreSubmitButton() {
+        btnSubmitRequest.setEnabled(true);
+        btnSubmitRequest.setText("Gửi yêu cầu");
     }
 
     private void selectGalleryThumb(int index, int resId) {
@@ -356,8 +541,11 @@ public class EquipmentDetailActivity extends AppCompatActivity {
                     cal.set(Calendar.MONTH, month);
                     cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                    if (!isStart && endCalendar.before(startCalendar)) {
-                        Toast.makeText(this, "Return date must be after borrow date", Toast.LENGTH_SHORT).show();
+                    if (isStart && endCalendar.before(startCalendar)) {
+                        endCalendar.setTimeInMillis(startCalendar.getTimeInMillis());
+                        endCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    } else if (!isStart && endCalendar.before(startCalendar)) {
+                        Toast.makeText(this, "Ngày trả phải sau ngày mượn", Toast.LENGTH_SHORT).show();
                         endCalendar.setTimeInMillis(startCalendar.getTimeInMillis());
                         endCalendar.add(Calendar.DAY_OF_MONTH, 1);
                     }
@@ -367,6 +555,11 @@ public class EquipmentDetailActivity extends AppCompatActivity {
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH));
+        if (isStart) {
+            dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        } else {
+            dialog.getDatePicker().setMinDate(startCalendar.getTimeInMillis() - 1000);
+        }
         dialog.show();
     }
 
@@ -374,11 +567,23 @@ public class EquipmentDetailActivity extends AppCompatActivity {
         tvStartDate.setText(dateFormat.format(startCalendar.getTime()));
         tvEndDate.setText(dateFormat.format(endCalendar.getTime()));
 
-        long diffMillis = endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis();
-        long diffDays = Math.max(1, diffMillis / (24 * 60 * 60 * 1000));
+        Calendar s = (Calendar) startCalendar.clone();
+        s.set(Calendar.HOUR_OF_DAY, 0);
+        s.set(Calendar.MINUTE, 0);
+        s.set(Calendar.SECOND, 0);
+        s.set(Calendar.MILLISECOND, 0);
 
-        String durationStr = diffDays + (diffDays == 1 ? " Day" : " Days");
+        Calendar e = (Calendar) endCalendar.clone();
+        e.set(Calendar.HOUR_OF_DAY, 0);
+        e.set(Calendar.MINUTE, 0);
+        e.set(Calendar.SECOND, 0);
+        e.set(Calendar.MILLISECOND, 0);
+
+        long diffMillis = e.getTimeInMillis() - s.getTimeInMillis();
+        long diffDays = Math.max(1, Math.round(diffMillis / (double) (24 * 60 * 60 * 1000)));
+
+        String durationStr = diffDays + " Ngày";
         tvDurationPill.setText(durationStr);
-        tvBottomDuration.setText("Loan: " + durationStr);
+        tvBottomDuration.setText("Thời hạn: " + durationStr);
     }
 }

@@ -43,7 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Digital Return Kiosk Pass"
+                    android:text="Thẻ trả thiết bị"
                     android:textColor="#0F172A"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -149,7 +149,7 @@
                     android:layout_height="match_parent"
                     android:padding="16dp"
                     android:src="@drawable/ic_qr_code"
-                    android:tint="#0F172A"
+                    app:tint="#0F172A"
                     android:contentDescription="Mã QR Kiosk Pass" />
             </androidx.cardview.widget.CardView>
 
@@ -207,7 +207,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Đưa mã QR hoặc mã vạch trước cảm biến quang học của tủ Kiosk. Khay chứa sẽ tự động bật mở để bạn đặt thiết bị vào."
+                android:text="Quét mã QR hoặc mã vạch tại tủ Kiosk để mở khay trả thiết bị."
                 android:textColor="#64748B"
                 android:textSize="11sp"
                 android:gravity="center" />
@@ -216,7 +216,7 @@
                 android:id="@+id/btnDialogClose"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="Đóng thẻ Kiosk Pass"
+                android:text="Đóng"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"

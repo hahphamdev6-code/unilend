@@ -4,26 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="24dp"
-    android:paddingEnd="24dp"
-    android:paddingTop="8dp">
+    android:paddingTop="12dp"
+    android:paddingEnd="24dp">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilSchool"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.UniLend.TextInputLayout.Dropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tên trường"
+        android:hint="Chọn hoặc nhập tên trường"
+        app:endIconMode="dropdown_menu"
         app:helperText="Gõ tên hoặc viết tắt (VD: bach khoa, UET, UEH). Có thể bỏ trống."
-        app:startIconDrawable="@drawable/ic_school"
-        app:endIconMode="clear_text">
+        app:helperTextTextColor="@color/on_surface_variant"
+        app:startIconDrawable="@drawable/ic_school">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/etSchool"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:completionThreshold="1"
+            android:fontFamily="@font/plus_jakarta_sans_medium"
             android:imeOptions="actionDone"
             android:inputType="textCapWords"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:minHeight="52dp"
+            android:textColor="@color/on_surface"
+            android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 </FrameLayout>

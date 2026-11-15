@@ -152,7 +152,8 @@ INSERT INTO categories (code, name, description) VALUES
 ('PROJ', 'Máy chiếu & Trình chiếu', 'Máy chiếu đa năng, bút trình chiếu laser, cáp HDMI/Type-C'),
 ('AUDIO', 'Thiết bị Âm thanh', 'Micro không dây, loa trợ giảng, bộ thu phát âm thanh hội trường'),
 ('LAB_KIT', 'Bộ Kit Thực hành & IoT', 'Arduino, Raspberry Pi, Kit cảm biến, đồng hồ đo điện'),
-('LAPTOP', 'Máy tính xách tay & Tablet', 'Laptop phục vụ thi cử, thuyết trình và sự kiện');
+('LAPTOP', 'Máy tính xách tay & Tablet', 'Laptop phục vụ thi cử, thuyết trình và sự kiện'),
+('CAMERA', 'Máy ảnh & Flycam', 'Máy ảnh Mirrorless, ống kính và thiết bị bay quay phim');
 
 INSERT INTO rooms (room_code, building, room_type, capacity, status) VALUES
 ('KHO-A1', 'Tòa nhà A1 - Tầng 1', 'STORAGE', 0, 'AVAILABLE'),
@@ -161,7 +162,11 @@ INSERT INTO rooms (room_code, building, room_type, capacity, status) VALUES
 ('LAB-CNTT01', 'Tòa nhà B2 - Tầng 2', 'LAB', 40, 'AVAILABLE');
 
 INSERT INTO equipments (equipment_code, qr_code, name, category_id, room_id, brand, model_number, serial_number, specifications, status) VALUES
-('TB-PROJ-001', 'QR_UNILEND_PROJ_001', 'Máy chiếu Epson EB-E01 Full HD', 1, 1, 'Epson', 'EB-E01', 'SN-EPS-99201', 'Độ sáng 3300 Ansi Lumens, HDMI, VGA', 'AVAILABLE'),
+('TB-PROJ-001', 'QR_UNILEND_PROJ_001', 'Epson PowerLite Laser Projector', 1, 1, 'Epson', 'EB-E01', 'SN-EPS-99201', '1080p WUXGA Laser, 4000 Lumens, HDMI, USB-C, VGA', 'AVAILABLE'),
 ('TB-PROJ-002', 'QR_UNILEND_PROJ_002', 'Máy chiếu Sony VPL-DX221', 1, 1, 'Sony', 'VPL-DX221', 'SN-SNY-88102', 'Độ sáng 2700 Ansi Lumens, HDMI', 'AVAILABLE'),
-('TB-AUD-001', 'QR_UNILEND_AUD_001', 'Bộ Micro không dây Shure BLX288', 2, 1, 'Shure', 'BLX288/PG58', 'SN-SHR-11029', '2 tay micro không dây, thu phát UHF', 'AVAILABLE'),
-('TB-IOT-001', 'QR_UNILEND_IOT_001', 'Bộ Kit thực hành Raspberry Pi 5 8GB', 3, 4, 'Raspberry Pi', 'RPi-5-8GB', 'SN-RPI-55410', 'RAM 8GB, thẻ nhớ 64GB, bộ cảm biến nhiệt độ/độ ẩm', 'AVAILABLE');
+('TB-AUD-001', 'QR_UNILEND_AUD_001', 'RØDE Wireless GO II Dual Mic Kit', 2, 1, 'RØDE', 'Wireless GO II', 'SN-RDE-11029', '2 tay micro không dây 2.4GHz, thu phát 200m, USB-C', 'AVAILABLE'),
+('TB-IOT-001', 'QR_UNILEND_IOT_001', 'Raspberry Pi 4 Practice Kit', 3, 4, 'Raspberry Pi', 'RPi-4-8GB', 'SN-RPI-55410', 'RAM 8GB, thẻ nhớ 64GB, bộ cảm biến nhiệt độ/độ ẩm', 'AVAILABLE'),
+('TB-CAM-001', 'QR_UNILEND_CAM_001', 'Sony Alpha a7 IV Mirrorless Camera', 5, 1, 'Sony', 'ILCE-7M4', 'SN-SNY-77401', '33MP Full-Frame Exmor, 4K 60p 10-bit 4:2:2, E-Mount', 'AVAILABLE'),
+('TB-DRN-001', 'QR_UNILEND_DRN_001', 'DJI Air 3 Fly More Combo Drone', 5, 1, 'DJI', 'Air 3', 'SN-DJI-33108', 'Dual 4K HDR CMOS, 46 mins flight time, O4 20km', 'AVAILABLE'),
+('TB-LAP-001', 'QR_UNILEND_LAP_001', 'Apple MacBook Pro 16" M3 Max', 4, 4, 'Apple', 'MacBook Pro 16 M3 Max', 'SN-APL-88210', 'M3 Max 16-Core, 64GB RAM, 1TB SSD, Liquid Retina XDR', 'AVAILABLE'),
+('TB-AUD-002', 'QR_UNILEND_AUD_002', 'Bose S1 Pro+ Portable PA Speaker', 2, 1, 'Bose', 'S1 Pro+', 'SN-BSE-11050', '160W SPL, 11h Battery, 3-Channel OLED Mixer, Bluetooth 5.3', 'AVAILABLE');
